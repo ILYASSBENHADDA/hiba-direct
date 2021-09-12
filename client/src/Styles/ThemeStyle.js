@@ -94,7 +94,10 @@ const useStyles = makeStyles((theme) => ({
      margin: {
           margin: theme.spacing(1),
      },
-     
+     backdrop: {
+          zIndex: theme.zIndex.drawer + 1,
+          color: '#fff',
+     },
 }));
 
 export default useStyles

@@ -12,6 +12,9 @@ import api from '../../Api/api';
 import IconButton from '@material-ui/core/IconButton';
 import NotValid from '@material-ui/icons/NotInterested';
 import Valid from '@material-ui/icons/Check';
+import OpenLink from '@material-ui/icons/OpenInNew';
+import DateFormat from '../../Utils/DateFormat';
+import PriceFormat from '../../Utils/PriceFormat';
 
 
 export default function PaymentList() {
@@ -31,19 +34,23 @@ export default function PaymentList() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>Date</TableCell>
-            <TableCell>Amount</TableCell>
-            <TableCell>Email</TableCell>
-            <TableCell>Is Logged In</TableCell>
+            <TableCell>AMOUNT</TableCell>
+            <TableCell>FUNDRAISER</TableCell>
+            <TableCell>EMAIL</TableCell>
+            <TableCell>DONOR</TableCell>
+            <TableCell>DATE</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {payment === !null ? payment.map((item, key) => (
+          {payment.map((item, key) => (
             <TableRow key={key}>
-              <TableCell component="th">{item.date}</TableCell>
-              <TableCell>{item.amount}</TableCell>
+              <TableCell>{PriceFormat(item.amount)}</TableCell>
+              <TableCell><Link href={`/post/${item.fundraiser_id}`}><OpenLink fontSize='small'/>{' Review'}</Link></TableCell>
+              <TableCell>{item.email}</TableCell>
+              <TableCell>{item.donor_name}</TableCell>
+              <TableCell component="th">{DateFormat(item.date)}</TableCell>
             </TableRow>
-          )): 'Table is empty'}
+          ))}
         </TableBody>
       </Table>
     </TableContainer>

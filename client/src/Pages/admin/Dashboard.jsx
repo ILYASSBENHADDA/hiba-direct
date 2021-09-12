@@ -1,19 +1,126 @@
-import React from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
-import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import Deposits from '../../Components/admin/Deposits';
+import Statistics from '../../Components/admin/Statistics';
 import ReqList from '../../Components/admin/ReqList';
 import PostList from '../../Components/user/PostList';
 import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
 import AddIcon from '@material-ui/icons/Add';
 import Copyright from '../../Components/Copyright';
+// Context Api 
+import { UserContext } from "../../Context/UserContext"
+import Chart from '../../Components/admin/Chart';
+import api from '../../Api/api';
+import PriceFormat from '../../Utils/PriceFormat';
+
+
+export default function Dashboard() {
+  const classes = useStyles();
+  const [statistic, setStatistic] = useState('')
+  const { infos:{isAuth, role}} = useContext(UserContext)
+
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+  useEffect(() => {
+    api.get('statistics').then(resp => {
+      console.log(resp)
+      setStatistic(resp.data)
+    })
+  }, [])
+
+  return (
+    <div className={classes.root}>
+
+      {/* HERE NAV & SIDE BAR */}
+      <NavAndSideBar />
+
+      {/* CONTENT */}
+      <main className={classes.content}>
+        <div className={classes.appBarSpacer} />
+        <Container maxWidth="lg" className={classes.container}>
+          {/* End Add Fundraiser Button */}
+          <Button
+            style={{marginBottom: 20}}
+            variant="contained"
+            color="primary"
+            className={classes.button}
+            startIcon={<AddIcon />}
+          >
+            Start a new fundraiser
+          </Button>
+          {/* End Add Fundraiser Button */}
+          
+          <Grid container spacing={3}>
+
+            {role === 'Admin' ?
+            <>
+            {/* Recent Statistics (ADMIN) */}
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper className={fixedHeightPaper}>
+                <Statistics title={'Fundraiser Accepted'} number={statistic.fundraiserApprovedCount} />
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper className={fixedHeightPaper}>
+                <Statistics title={'Fundraiser Pending'} number={statistic.fundraiserPendingCount}/>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper className={fixedHeightPaper}>
+                <Statistics title={'Total Users'} number={statistic.UsersCount}/>
+              </Paper>
+            </Grid>
+
+            <Grid item xs={12} md={4} lg={3}>
+              <Paper className={fixedHeightPaper}>
+                <Statistics title={'Total paid'} number={PriceFormat(statistic.PaidXCount)}/>
+              </Paper>
+            </Grid>
+            
+            {/* Recent Requists (AMDIN) */}
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <ReqList />              
+              </Paper>
+            </Grid>
+            </>
+            : 
+            <>
+            {/* Recent Post list (USER) */}
+            <Grid item xs={12}>
+              <Paper className={classes.paper}>
+                <PostList />              
+              </Paper>
+            </Grid>
+            </>
+            }
+
+
+          </Grid>
+
+          {/* Copyright */}
+          <Box pt={4}>
+            <Copyright />
+          </Box>
+          {/* End Copyright */}
+        </Container>
+      </main>
+      {/* END CONTENT */}
+
+    </div>
+  );
+}
+
+
+
+
 
 
 const useStyles = makeStyles((theme) => ({
@@ -40,67 +147,3 @@ const useStyles = makeStyles((theme) => ({
     height: 240,
   },
 }));
-
-export default function Dashboard() {
-  const classes = useStyles();
-
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-  return (
-    <div className={classes.root}>
-
-      {/* HERE NAV & SIDE BAR */}
-      <NavAndSideBar />
-
-      {/* CONTENT */}
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          {/* End Add Fundraiser Button */}
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            startIcon={<AddIcon />}
-          >
-            Start a new fundraiser
-          </Button>
-          {/* End Add Fundraiser Button */}
-          
-          <Grid container spacing={3}>
-
-            {/* Chart */}
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                {/* <Chart /> */}
-              </Paper>
-            </Grid>
-
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            
-            {/* Recent Requists */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <ReqList />
-                {/* <PostList /> */}
-              </Paper>
-            </Grid>
-          </Grid>
-
-          {/* Copyright */}
-          <Box pt={4}>
-            <Copyright />
-          </Box>
-          {/* End Copyright */}
-        </Container>
-      </main>
-      {/* END CONTENT */}
-
-    </div>
-  );
-}

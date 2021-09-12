@@ -9,6 +9,9 @@ const theme = createTheme({
     primary: {
       main: '#549e39'
     },
+    secondary: {
+      main: '#ffffff'
+    },
     typography: {
       fontFamily: 'Lato',
       // fontSize: 20

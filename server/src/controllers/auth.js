@@ -29,7 +29,6 @@ exports.register = (req, res) => {
                first_name: first_name,
                last_name: last_name,
                email: email,
-               role: 'user',
                password: HashPass
           })
           .save()
@@ -48,6 +47,7 @@ exports.register = (req, res) => {
 */
 exports.signIn = (req, res) => {
      const { email, password } = req.body
+     console.log(req.body)
 
      User.findOne({email: email}).then(user => {
           if(!user) {
@@ -65,13 +65,13 @@ exports.signIn = (req, res) => {
                return res.status(200).cookie('admin', token, {
                     httpOnly: true,
                     maxAge: maxAge * 1000
-               }).json({message: 'You\'re LoggedIn as Admin'})
+               }).json({message: 'You\'re LoggedIn as Admin', isAuth: true})
           } 
           else if( user.role === 'user') {
                return res.status(200).cookie('user', token, {
                     httpOnly: true,
                     maxAge: maxAge * 1000
-               }).json({message: 'You\'re LoggedIn as User'})
+               }).json({message: 'You\'re LoggedIn as User', isAuth: true})
           }
           
      })

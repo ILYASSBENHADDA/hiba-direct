@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  padding: 80px 60px;
+  padding: 30px 60px;
   border-top: 1px solid #e4e4e4;
   border-bottom: 1px solid #e4e4e4;
   // background: radial-gradient(circle, rgba(92,39,251,1) 0%, rgba(112,71,247,1) 100%);

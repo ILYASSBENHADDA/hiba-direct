@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useContext} from 'react';
 import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
@@ -17,45 +17,19 @@ import Navbar from '../Components/Navbar';
 import api from '../Api/api';
 import FooterContainer from '../Components/footer';
 import Copyright from '../Components/Copyright';
+import DateFormat from '../Utils/DateFormat';
+import PriceFormat from '../Utils/PriceFormat';
+import coverImg from '../Assets/images/cover.png';
+import pricePerCent from '../Utils/pricePerCent';
+import { UserContext } from "../Context/UserContext"
+import Header from '../Components/Header';
 
-const useStyles = makeStyles((theme) => ({
-  icon: {
-    marginRight: theme.spacing(2),
-  },
-  heroContent: {
-    backgroundColor: theme.palette.background.paper,
-    padding: theme.spacing(8, 0, 6),
-  },
-  heroButtons: {
-    marginTop: theme.spacing(4),
-  },
-  cardGrid: {
-    paddingTop: theme.spacing(8),
-    paddingBottom: theme.spacing(8),
-  },
-  card: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-  },
-  cardMedia: {
-    paddingTop: '56.25%', // 16:9
-  },
-  cardContent: {
-    flexGrow: 1,
-  },
-}));
 
-// Generate Date format
-function taskDate(dateMilli) {
-  var d = (new Date(dateMilli) + '').split(' ');
-  d[2] = d[2] + ',';
-
-  return [d[0], d[1], d[2], d[3]].join(' ');
-}
 
 export default function Home() {
   const classes = useStyles();
+  const { infos:{isAuth, role}} = useContext(UserContext)
+
 
   const [fundraiser, setFundraiser] = useState([])
   
@@ -70,39 +44,18 @@ export default function Home() {
       <Navbar />
       
       <main>
-        {/* Hero unit */}
-        <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h1" variant="h2" align="center" color="textPrimary" gutterBottom>
-              Album layout
-            </Typography>
-            <Typography variant="h5" align="center" color="textSecondary" paragraph>
-              Something short and leading about the collection below—its contents, the creator, etc.
-              Make it short and sweet, but not too short so folks don&apos;t simply skip over it
-              entirely.
-            </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justifyContent="center">
-                <Grid item>
-                  <Button variant="contained" color="primary">
-                    Main call to action
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary">
-                    Secondary action
-                  </Button>
-                </Grid>
-              </Grid>
-            </div>
-          </Container>
-        </div>
-        {/* End hero unit */}
-        
+        {/* Header */}
+        <Container maxWidth="lg">
+          <main style={{marginTop: 30}}>
+            <Header />
+          </main>
+        </Container>
+                
         <Container className={classes.cardGrid} maxWidth="md">
           {/* Cards */}
           <Grid container spacing={4}>
             {fundraiser.map((item, key) => (
+              item.isFreezed ? null : <>
               <Grid item key={key} xs={12} sm={6} md={4}>
                 <Link href={`/post/${item._id}`} style={{ textDecoration: 'none' }}>
                 <Card className={classes.card}>
@@ -132,7 +85,7 @@ export default function Home() {
                         variant="outlined"
                         size="small"
                         icon={<PostTime />}
-                        label={taskDate(item.publishDate)}
+                        label={DateFormat(item.publishDate)}
                         color="primary"
                       />
                     </Box>
@@ -140,14 +93,15 @@ export default function Home() {
                     
                     {/* Progess */}
                     <Box style={{marginTop: 15, marginBottom: 15}}>
-                      <LinearProgress variant="determinate" value={50} />
+                      <LinearProgress variant="determinate" value={pricePerCent(item.amount, item.paid)} />
                     </Box>
                     {/* End Progess */}
-                    <Typography><span style={{fontWeight: 700, fontSize: 18}}>$300,000 raised</span> of $500,000</Typography>
+                    <Typography><span style={{fontWeight: 700, fontSize: 18}}>{PriceFormat(item.paid)} raised</span> of {PriceFormat(item.amount)}</Typography>
                   </CardContent>
                 </Card>
                 </Link>
               </Grid>
+              </>
               
             ))}
           </Grid>
@@ -168,3 +122,37 @@ export default function Home() {
     </>
   );
 }
+
+
+
+
+const useStyles = makeStyles((theme) => ({
+  icon: {
+    marginRight: theme.spacing(2),
+  },
+  heroContent: {
+    backgroundColor: theme.palette.background.paper,
+    padding: theme.spacing(8, 0, 6),
+    backgroundImage: `url("${coverImg}")`,
+    height: 360,
+    backgroundSize: "cover",
+  },
+  heroButtons: {
+    marginTop: theme.spacing(4),
+  },
+  cardGrid: {
+    paddingTop: theme.spacing(8),
+    paddingBottom: theme.spacing(8),
+  },
+  card: {
+    height: '100%',
+    display: 'flex',
+    flexDirection: 'column',
+  },
+  cardMedia: {
+    paddingTop: '56.25%', // 16:9
+  },
+  cardContent: {
+    flexGrow: 1,
+  },
+}));

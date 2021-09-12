@@ -1,4 +1,4 @@
-import axios from 'axios'
+// import axios from 'axios'
 import React, { createContext, useState, useEffect } from 'react'
 import api from '../Api/api'
 
@@ -7,8 +7,8 @@ export const UserContext = createContext(null)
 
 export const UserProvider = ({ children }) => {
 
-     const [isAuth, setIsAuth] = useState(false)
-     const [role, setRole] = useState('')
+     // const [isAuth, setIsAuth] = useState(false)
+     // const [role, setRole] = useState('')
      // const [userInfo, setUserInfo] = useState([])
 
      // useEffect(()=> {
@@ -23,7 +23,7 @@ export const UserProvider = ({ children }) => {
      const [infos, setInfos] = useState({ isAuth: false, role: '' });
      const getData = async () => {
           try {
-               const { data } = await axios.get("http://localhost:5000");
+               const { data } = await api.get('');
                if (data) {
                     console.log(data);
                     setInfos(data);
@@ -37,18 +37,10 @@ export const UserProvider = ({ children }) => {
           getData();
      }, []);
 
-     // Owner & Client Info
-     // useEffect(()=> {
-     //      axios.get('http://localhost:3030/api/profile').then(response => {
-     //           setUserInfo(response.data)
-     //           // console.log(response)
-     //      })
-     // }, [])
-
 
      return (
           <>
-               <UserContext.Provider value={{ infos, setInfos }}>
+               <UserContext.Provider value={{ infos }}>
                     {children}
                </UserContext.Provider>
           </>

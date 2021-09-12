@@ -2,99 +2,71 @@ const Fundraiser = require('../models/fundraiser')
 const Payment = require('../models/payment')
 const jwt = require('jsonwebtoken')
 const STRIPE_SECRECT_KEY = process.env.STRIPE_SECRECT_KEY
-const stripe = require("stripe")(STRIPE_SECRECT_KEY);
-const uuid = require("uuid");
+const stripe = require('stripe')(STRIPE_SECRECT_KEY);
+// const uuid = require('uuid/v4');
 
 
 /*
      Payment
 */
-exports.payment = (req, res) => {
-     const { price, token, fundraiserId } = req.body;
-     console.log("PRICE ", price);
-     console.log("Token ", token);
-     const idempontencyKey = uuid();
+exports.payment = async (req, res) => {
+
+     const { price, token, name, fundraiserId } = req.body
 
      // Get current user
-     let user_id
-     const userToken = req.cookies.user
-     if (userToken) {
-          jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
-               if (err) throw err
-               user_id = decodedToken.id
-          })
-     }
+     // let user_id
+     // const userToken = req.cookies.user
+     // if (userToken) {
+     //      jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+     //           if (err) throw err
+     //           user_id = decodedToken.id
+     //      })
+     // }
 
-     if ( user_id !== null ) {
-          return stripe.customers
-          .create({
+
+     stripe.charges.create({
+          amount: price * 100,
+          source: token.id,
+          currency: 'usd',
+          receipt_email: token.email,
+          description: name,
+          shipping: {
+               name: token.card.name,
+               address: {
+                    line1: token.card.address_line1,
+                    country: token.card.address_country,
+                    city: token.card.address_city,
+                    postal_code: token.card.address_zip
+               }
+          }
+     })
+     .then(() => {
+
+          // Update paid & donors
+          const priceInc = Number(price)
+          const update = {
+               $inc: { paid: priceInc, donors: 1 }
+          }
+          Fundraiser.findByIdAndUpdate(fundraiserId, update).exec()
+
+
+          // Register payment
+          new Payment({
+               fundraiser_id: fundraiserId,
+               donor_name: token.card.name,
                email: token.email,
-               source: token.id
+               amount: price,
+               date: Date(token.created),
+          }).save()
+          .then(data => {
+               return res.json('Payment regestred success For users logged in')
           })
-          .then(customer => {
-               stripe.charges.create({
-                    amount: price * 100,
-                    currency: "usd",
-                    customer: customer.id,
-                    receipt_email: token.email,
-                    // description: `purchase of ${product.name}`,
-               },
-               { idempontencyKey });
-               
-               // For users logged in
-               new Payment({
-                    user_id: user_id,
-                    amount: price,
-                    date: token.created,
-               }).save()
-               .then(data => {
-                    return res.json('Payment regestred success For users logged in')
-               })
-          })
-          // .then(result => res.status(200).json(result))
-          .catch(err => console.log(err));
-     }
+          
 
-     // If user_id is empty
-     else {
-          return stripe.customers
-          .create({
-               email: token.email,
-               source: token.id
-          })
-          .then(customer => {
-               stripe.charges.create({
-                    amount: price * 100,
-                    currency: "usd",
-                    customer: customer.id,
-                    receipt_email: token.email,
-                    // description: `purchase of ${product.name}`,
-                    shipping: {
-                         name: token.card.name,
-                         address: {
-                              country: token.card.address_country
-                         }
-                    }
-               },
-               { idempontencyKey });
+     }).catch((error) => {
+          return console.log('Fail Purchase', error)
+     })
 
-               // For users not logged in
-               new Payment({
-                    email: token.email,
-                    amount: price,
-                    date: token.created,
-               }).save()
-               .then(data => {
-                    return res.json('Payment regestred success For users not logged in')
-               })
-          })
-          // .then(result => res.status(200).json(result))
-          .catch(err => console.log(err));
-     }
-
-
-     // Update paid & donors
-     Fundraiser.findByIdAndUpdate(fundraiserId, {$inc: { paid: price}, $inc: { donors: 1} }).exec()
 }
 
 
@@ -121,12 +93,33 @@ exports.getFundraiserItem = (req, res) => {
 
      Fundraiser.findById(id)
      .populate('user_id city_id category_id')
+     .exec()
      .then(data => {
           return res.json(data)
      })
+     .catch(err => { console.log(err) })
+     
      // .exec(function(err, data){
      //      if(err) throw err
-     //      return res.status(200).send(data)
+     //      return res.status(200).json(data)
      // })
 
+}
+
+
+/*
+     Update Fundraiser
+*/
+exports.updateFundraiser = (req, res) => {
+     const { title, description } = req.body
+     const { id } = req.params
+
+     const update = {
+          title: title,
+          description: description
+     }
+     Fundraiser.findByIdAndUpdate(id, update)
+     .then(() => {
+          return res.json({msg: 'Data updated success'})
+     })
 }

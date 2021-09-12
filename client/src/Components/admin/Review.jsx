@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import Link from '@material-ui/core/Link';
-import { Grid, TextField, Button, Snackbar, FormLabel } from '@material-ui/core';
+import { Grid, TextField, Button, Snackbar, FormLabel, Box, CardMedia } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import Title from '../dashboard/Title';
 import useStyles from '../../Styles/ThemeStyle';
 import api from '../../Api/api';
+import FreezeIcon from '@material-ui/icons/AcUnit';
+import DeleteIcon from '@material-ui/icons/DeleteOutline';
+import UpdateIcon from '@material-ui/icons/Update';
+import OpenLink from '@material-ui/icons/OpenInNew';
 
 function Alert(props) {
      return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -15,7 +19,15 @@ export default function Review() {
      const classes = useStyles();
 
      const [open, setOpen] = useState(false);
-     const [fundraiser, setFundraiser] = useState([])
+     const [msg, setMsg] = useState('');
+     const [fundraiser, setFundraiser] = useState({
+          title: '',
+          description: ''
+     })
+     // const [newValue, setNewValue] = useState({
+     //      amount: ''
+     // })
+
      const { id } = useParams()
 
      useEffect(() => {
@@ -27,21 +39,61 @@ export default function Review() {
           .catch((error) => alert(error))  
      }, [id])
 
+     const onChange = (e) => {
+          setFundraiser({...fundraiser, [e.target.name]: e.target.value})
+     }
 
-     // On Submit
-     const onSubmit = (e) => {
+     // On Update
+     const onUpdate = (e) => {
           e.preventDefault()
 
-          api.post('create-fundraiser')
-          .then(resp => console.log(resp))
+          api.post(`update-fundraiser/${id}`, fundraiser)
+          .then((resp) => {
+               setMsg(resp.data.msg)
+               setOpen(true)
+          })
           .catch((error) => alert(error))
      }
 
-     
-     // For Alert
-     const handleClick = () => {
-          setOpen(true);
-     };
+     // On Freeze
+     const onFreeze = (id, boolean) => {
+
+          const alert = window.confirm(`Are you sure you want to ${boolean ? 'defrost': 'freeze'} this fundraier?`)
+          if(alert) {
+               api.post('freeze-fundraiser', { id, boolean })
+               .then((resp) => {
+                    setMsg(resp.data.msg)
+                    setOpen(true)
+                    setTimeout(() => {
+                         window.location.reload()
+                    }, 1500);
+               })
+               .catch((error) => alert(error))
+          }
+     }
+
+     // On Delete
+     const onDelete = (id) => {
+
+          const alert = window.confirm(`Are you sure you want to delete this fundraising?`)
+          if(alert) {
+               api.post('delete-fundraiser', { id })
+               .then((resp) => {
+                    setMsg(resp.data.msg)
+                    setOpen(true)
+                    setTimeout(() => {
+                         window.location.href = "/dashboard"
+                    }, 1500);
+               })
+               .catch((error) => alert(error))
+          } 
+     }
+
+     // On Fix
+     const onFix = (id) => {
+          console.log(id)
+          
+     }
 
      const handleClose = (event, reason) => {
           if (reason === 'clickaway') {
@@ -54,9 +106,23 @@ export default function Review() {
 
      return (
      <>
-          <Title>Fundraising Details</Title>
-          <form onSubmit={onSubmit}>
+          {/* <Title><Link href={`/post/${fundraiser.id}`}> {fundraiser.title} <OpenLink fontSize='small'/> </Link></Title> */}
+          <Title>{fundraiser.title}</Title>
+          <form>
           <Grid container spacing={2}>
+
+               <Grid item xs={12}>
+                    <CardMedia
+                    style={{
+                         height: 0,
+                         paddingTop: '30%',
+                         borderRadius: 10,
+                    }}
+                    // className={classes.media}
+                    image={fundraiser.image}
+                    title={fundraiser.title}
+                    />
+               </Grid>
                
                <Grid item xs={12}>
                     <FormLabel>Username</FormLabel>
@@ -100,14 +166,7 @@ export default function Review() {
                          fullWidth
                          value={fundraiser.amount}
                     />
-               </Grid>
-
-               <Grid item xs={12}>
-                    <FormLabel>Image</FormLabel>
-                    <div>
-                         <img src={fundraiser.image} alt="" width='60%' />
-                    </div>
-               </Grid>
+              </Grid>
 
                <Grid item xs={12}>
                     <FormLabel>Title</FormLabel>
@@ -115,6 +174,8 @@ export default function Review() {
                          variant="outlined"
                          fullWidth
                          value={fundraiser.title}
+                         name="title"
+                         onChange={onChange}
                     />
                </Grid>
 
@@ -126,25 +187,79 @@ export default function Review() {
                          value={fundraiser.description}
                          multiline
                          rows={5}
+                         name="description"
+                         onChange={onChange}
                     />
                </Grid>
 
-               <Grid item xs={4}>
+               <Grid item xs={12}>
+
+               {fundraiser.isAccepted === null ? null 
+               : 
+               (fundraiser.isAccepted === false ?
                <Button
                     type="submit"
-                    fullWidth
+                    // fullWidth
                     variant="contained"
                     color="primary"
                     size="large"
                     className={classes.submit}
-                    onClick={handleClick}
+                    onClick={onFix}
+                    startIcon={<UpdateIcon />}
                >
-               Create Fundraiser
+               {'Fix & Resend'}
                </Button>
+               : 
+               <>
+               <Box display="flex" justifyContent="space-around" >
+                    {/* Update Button */}
+                    <Button
+                         type="submit"
+                         // fullWidth
+                         variant="contained"
+                         color="primary"
+                         size="large"
+                         className={classes.submit}
+                         onClick={onUpdate}
+                         startIcon={<UpdateIcon />}
+                    >
+                    Update Fundraiser
+                    </Button>
+
+                    {/* Stop button */}
+                    <Button
+                    style={{color: '#fff', background: '#2196f3'}}
+                         // fullWidth
+                         variant="contained"
+                         size="large"
+                         className={classes.submit}
+                         onClick={() => onFreeze(fundraiser._id, fundraiser.isFreezed)}
+                         startIcon={<FreezeIcon />}
+                    >
+                         {fundraiser.isFreezed ? 'Defrost fundraiser' : 'Freeze fundraiser'}
+                    </Button>
+
+                    {/* Stop button */}
+                    <Button
+                    style={{color: '#fff', background: '#e00000'}}
+                         // fullWidth
+                         variant="contained"
+                         size="large"
+                         className={classes.submit}
+                         onClick={() => onDelete(fundraiser._id)}
+                         startIcon={<DeleteIcon />}
+                    >
+                    Delete fundraiser
+                    </Button>
+               </Box>
+
+               </> )}
+
+
                {/* ******************************************************************** */}
                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                     <Alert onClose={handleClose} severity="success">
-                         The fundraiser created successfully, waiting for approving
+                         {msg}
                     </Alert>
                </Snackbar>
                {/* ******************************************************************** */}

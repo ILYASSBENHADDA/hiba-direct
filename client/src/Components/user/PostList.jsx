@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import NotValid from '@material-ui/icons/NotInterested';
 import Valid from '@material-ui/icons/Check';
 import Chip from '@material-ui/core/Chip';
+import DateFormat from '../../Utils/DateFormat';
 
 
 export default function PostList() {
@@ -46,12 +47,19 @@ export default function PostList() {
         <TableBody>
           {fundraiser.map((item) => (
             <TableRow key={item.title}>
-              <TableCell component="th" scope="row">{(item.publishDate).toLocaleString().split('T')[0]}</TableCell>
+              <TableCell component="th" scope="row">{DateFormat(item.publishDate)}</TableCell>
               <TableCell><Link href={`/review/${item._id}`}>{item.title}</Link></TableCell>
               <TableCell>{item.city_id.name}</TableCell>
               <TableCell>{item.category_id.name}</TableCell>
-              <TableCell align='center'> 
-                {item.isAccepted === null 
+              <TableCell align='center'>
+                {item.isFreezed ? 
+                <Chip 
+                  size="small" 
+                  label="Freezed" 
+                  style={{color: '#fff', background: '#2196f3'}}
+                /> 
+                :
+                (item.isAccepted === null 
                 ? 
                 <Chip 
                   size="small" 
@@ -60,7 +68,7 @@ export default function PostList() {
                 />
                 : 
                 (item.isAccepted === false ? <Chip size="small" label="Regected" style={{color: '#fff', background: '#e00000'}} /> : <Chip size="small" label="Approved" color='primary' /> )
-                } 
+                )} 
               </TableCell>
             </TableRow>
           ))}

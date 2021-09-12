@@ -10,19 +10,20 @@ import AddFundraiser from '../Pages/admin/AddFundraiser'
 import Single from '../Pages/Single'
 import DetailsInfo from '../Pages/admin/DetailsInfo'
 import AddCity from '../Pages/admin/AddCity'
-// Protected Routes
-import { AuthRouter, AdminRouter, UserRouter } from './ProtectedRoutes'
-// Context Api 
-import { UserContext } from "../Context/UserContext"
 import AddCategory from '../Pages/admin/AddCategory'
 import Payment from '../Pages/admin/Payment'
-
+import Blog from '../Pages/blog/Blog'
+import SingleBlog from '../Pages/blog/SingleBlog'
+import Users from '../Pages/admin/Users'
+// Protected Routes
+// import { AuthRouter, AdminRouter, UserRouter } from './ProtectedRoutes'
+// Context Api 
+import { UserContext } from "../Context/UserContext"
 
 
 
 function Routes() {
-     const { infos:{isAuth, role}} = useContext(UserContext)
-     console.table({isAuth , role});
+     const { infos: {isAuth, role} } = useContext(UserContext)
 
      return (
           <>
@@ -33,23 +34,29 @@ function Routes() {
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/post/:id" component={Single}/>
                     <Route exact path="/logout" component={Logout}/>
+                    <Route exact path="/blog" component={Blog}/>
+                    <Route exact path="/blog/:id" component={SingleBlog}/>
                     
                     {/* Authentication */}
-                    {/* <AuthRouter exact path="/sign-in" component={SignIn} isAuth={isAuth} />
-                    <AuthRouter exact path="/sign-up" component={SignUp} isAuth={isAuth} /> */}
+                    {isAuth ? null
+                    : <>
                     <Route exact path="/sign-up" component={SignUp}/>
                     <Route exact path="/sign-in" component={SignIn}/>
+                    </>}
 
-                    {/* Admin Routes */}
-                    {/* <AdminRouter exact isAuth={isAuth} role={role} path="/dashboard" component={Dashboard}/>
-                    <AdminRouter path="/add-fundraiser" component={AddFundraiser} isAuth={isAuth} role={role} />
-                    <AdminRouter path="/review/:id" component={DetailsInfo} isAuth={isAuth} role={role} /> */}
+                    {/* Admin & User Routes */}
+                    {!isAuth ? null
+                    : <>
                     <Route exact path="/dashboard" component={Dashboard}/>
                     <Route exact path="/add-fundraiser" component={AddFundraiser}/>
+                    <Route exact path="/review/:id" component={DetailsInfo}/>
+
+                    <Route exact path="/payments" component={Payment}/>
                     <Route exact path="/add-city" component={AddCity}/>
                     <Route exact path="/add-category" component={AddCategory}/>
-                    <Route exact path="/get-payment" component={Payment}/>
-                    <Route exact path="/review/:id" component={DetailsInfo}/>
+                    <Route exact path="/users" component={Users}/>
+
+                    </>}
 
                
                     <Route exact path="/404" component={NotFound}/>

@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useState, useEffect} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,15 +14,32 @@ import MailIcon from '@material-ui/icons/Mail';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
 import Link from '@material-ui/core/Link';
+import TextField from '@material-ui/core/TextField';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import useStyles from '../Styles/ThemeStyle';
 import { Button } from '@material-ui/core';
 import { UserContext } from "../Context/UserContext"
-
+import api from '../Api/api';
+import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 export default function Navbar() {
      const classes = useStyles();
      const { infos:{isAuth, role}} = useContext(UserContext)
+     const [fundraiser, setFundraiser] = useState([])
+     const [value, setValue] = useState('')
+
+     useEffect(() => {
+          api.get('get-fundraiser')
+          .then(resp => setFundraiser(resp.data))
+          .catch((error) => alert(error))
+     }, [])
+
+
+     const onSelect = (id) => {
+          window.location.href = `/post/${id}`
+     }
 
 
      const [anchorEl, setAnchorEl] = React.useState(null);
@@ -59,8 +76,10 @@ export default function Navbar() {
           open={isMenuOpen}
           onClose={handleMenuClose}
      >
-          <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
-          <MenuItem onClick={handleMenuClose}><Link href='/sign-in'>MY</Link></MenuItem>
+          <MenuItem onClick={() => window.location.href = "/dashboard"}>Profile</MenuItem>
+          <MenuItem onClick={() => window.location.href = "/dashboard"}>Your fundraisers</MenuItem>
+          <MenuItem onClick={() => window.location.href = "/add-fundraiser"}>Start a new fundraiser</MenuItem>
+          <MenuItem onClick={() => window.location.href = "/logout"}>Sign out</MenuItem>
      </Menu>
      );
 
@@ -75,22 +94,8 @@ export default function Navbar() {
           open={isMobileMenuOpen}
           onClose={handleMobileMenuClose}
      >
-          <MenuItem>
-          <IconButton aria-label="show 4 new mails" color="inherit">
-               <Badge badgeContent={4} color="secondary">
-               <MailIcon />
-               </Badge>
-          </IconButton>
-          <p>Messages</p>
-          </MenuItem>
-          <MenuItem>
-          <IconButton aria-label="show 11 new notifications" color="inherit">
-               <Badge badgeContent={11} color="secondary">
-               <NotificationsIcon />
-               </Badge>
-          </IconButton>
-          <p>Notifications</p>
-          </MenuItem>
+
+          {/* item mobile */}
           <MenuItem onClick={handleProfileMenuOpen}>
           <IconButton
                aria-label="account of current user"
@@ -101,6 +106,14 @@ export default function Navbar() {
                <AccountCircle />
           </IconButton>
           <p>Profile</p>
+          </MenuItem>
+
+          {/* item mobile */}
+          <MenuItem>
+          <IconButton color="inherit">
+               <ExitToAppIcon />
+          </IconButton>
+          <p>Sign out</p>
           </MenuItem>
      </Menu>
      );
@@ -117,80 +130,79 @@ export default function Navbar() {
                >
                     <MenuIcon />
                </IconButton>
+               
                <Typography className={classes.title} variant="h6" noWrap>
-                    Material-UI
+                    HIBA DIRECT {value}
                </Typography>
 
                {/* START SEARCH BAR */}
-               <div className={classes.search}>
-                    <div className={classes.searchIcon}>
-                    <SearchIcon />
-                    </div>
-                    <InputBase
-                    placeholder="Search…"
-                    classes={{
-                         root: classes.inputRoot,
-                         input: classes.inputInput,
-                    }} 
+               <div className={classes.search} style={{ width: 300 }}>
+                    {/* <div className={classes.searchIcon}>
+                         <SearchIcon />
+                    </div> */}
+                    <Autocomplete
+                         style={{ color: "#ffffff" }}
+                         options={fundraiser}
+                         // autoHighlight
+                         freeSolo
+                         getOptionLabel={(option) => option.title}
+                         renderOption={(option) => (
+                              <>
+                              <span onClick={() => onSelect(option._id)}>{option.title}</span>
+                              </>
+                         )}
+                         renderInput={(params) => (
+                              <TextField
+                              {...params}
+                              color="secondary"
+                              style={{ color: "#ffffff" }}
+                              size='small'
+                              // color='secondary'
+                              placeholder="Search.."
+                              variant="outlined"
+                              />
+                         )}
                     />
-                    
                </div>
                {/* END SEARCH BAR */}
 
                <div className={classes.grow} />
                <div className={classes.sectionDesktop}>
-                    <IconButton aria-label="show 4 new mails" color="inherit">
-                         <Badge badgeContent={4} color="secondary">
-                              <MailIcon />
-                         </Badge>
-                    </IconButton>
-                    <IconButton aria-label="show 17 new notifications" color="inherit">
-                         <Badge badgeContent={17} color="secondary">
-                              <NotificationsIcon />
-                         </Badge>
-                    </IconButton>
-                    <IconButton
-                         edge="end"
-                         aria-label="account of current user"
-                         aria-controls={menuId}
-                         aria-haspopup="true"
-                         onClick={handleProfileMenuOpen}
-                         color="inherit"
+                    
+                    {/* item web */}
+                    <Button 
+                    color="inherit"
+                    startIcon={<AccountCircle />}
+                    endIcon={<ArrowDropDownIcon />}
+                    onClick={handleProfileMenuOpen}
                     >
-                         <AccountCircle />
+                         Profile
+                    </Button>
+
+                    {/* item web */}
+                    <IconButton color="inherit">
+                         <ExitToAppIcon />
                     </IconButton>
 
-                    {/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-                    {/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-                    {/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-                    {/* !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! */}
-                    <Button color="inherit" onClick={() => window.location.href = "/dashboard"}>
-                         {/* <Link href="/dashboard" color="inherit"> */}
-                              Dashboard
-                         {/* </Link> */}
+                    {/* item web */}
+                    <Button 
+                     color="inherit"
+                     onClick={() => window.location.href = "/sign-up"}
+                    >
+                         Sign up
                     </Button>
-                    <Button color="inherit">
-                         <Link href="/sign-in" color="inherit">
-                              Sign in
-                         </Link>
+
+                    {/* item web */}
+                    <Button
+                     onClick={() => window.location.href = "/sign-in"}
+                     size="small"
+                     variant="outlined"
+                     color="primary"
+                     style={{ background: "#ffffff", marginLeft: 10 }}
+                    >
+                         Sign in
                     </Button>
-                    <Button color="inherit">
-                         <Link href="/sign-up" color="inherit">
-                              Sign up
-                         </Link>
-                    </Button>
-                    <Button color="inherit">
-                         <Link href="#" color="inherit">
-                              {role + ' Mode'}
-                         </Link>
-                    </Button>
-                    {isAuth ? 
-                    <Button color="inherit">
-                         <Link href="/logout" color="inherit">
-                              Logout
-                         </Link>
-                    </Button>
-                    : null}
+
                </div>
                <div className={classes.sectionMobile}>
                     <IconButton

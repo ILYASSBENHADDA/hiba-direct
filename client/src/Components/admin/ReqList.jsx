@@ -12,6 +12,8 @@ import api from '../../Api/api';
 import IconButton from '@material-ui/core/IconButton';
 import NotValid from '@material-ui/icons/NotInterested';
 import Valid from '@material-ui/icons/Check';
+import DateFormat from '../../Utils/DateFormat';
+import Tooltip from '@material-ui/core/Tooltip';
 
 
 export default function ReqList() {
@@ -26,7 +28,7 @@ export default function ReqList() {
 
 
   const ValidReq = (id, confirmation) => {
-    const alert = window.confirm(`Are you shore you want to valide`)
+    const alert = window.confirm(`Are you sure you want to valide`)
     if(alert) {
       api.post('confirm-fundraiser', {id, confirmation})
       .then(resp => console.log(resp.data))
@@ -36,7 +38,7 @@ export default function ReqList() {
   }
 
   const NotValidReq = (id, confirmation) => {
-    const alert = window.confirm(`Are you shore you want to refuse`)
+    const alert = window.confirm(`Are you sure you want to refuse`)
     if(alert) {
       api.post('confirm-fundraiser', {id, confirmation})
       .then(resp => console.log(resp.data))
@@ -66,14 +68,20 @@ export default function ReqList() {
               <TableCell><Link href={`/review/${item._id}`}>{item.title}</Link></TableCell>
               <TableCell>{item.city_id.name}</TableCell>
               <TableCell>{item.category_id.name}</TableCell>
-              <TableCell>{(item.publishDate).toLocaleString().split('T')[0]}</TableCell>
-              <TableCell align='center'> 
-                <IconButton onClick={() => ValidReq(item._id, true)}>
-                  <Valid />
-                </IconButton>
-                <IconButton onClick={() => NotValidReq(item._id, false)}>
-                  <NotValid />
-                </IconButton>
+              <TableCell>{DateFormat(item.publishDate)}</TableCell>
+              <TableCell align='center'>
+                {/* Validate */}
+                <Tooltip title='Validate'>
+                  <IconButton onClick={() => ValidReq(item._id, true)}>
+                    <Valid />
+                  </IconButton>
+                </Tooltip>
+                {/* Refuse */}
+                <Tooltip title='Refuse'>
+                  <IconButton onClick={() => NotValidReq(item._id, false)}>
+                    <NotValid />
+                  </IconButton>
+                </Tooltip>
               </TableCell>
             </TableRow>
           ))}

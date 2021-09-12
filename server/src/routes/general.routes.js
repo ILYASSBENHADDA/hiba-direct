@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { getFundraiserTrue, getFundraiserItem, payment } = require('../controllers/general')
+const { getFundraiserTrue, getFundraiserItem, payment, updateFundraiser } = require('../controllers/general')
 const Fundraiser = require('../models/fundraiser')
 const cloudinary = require("../utils/cloudinary");
 const upload = require("../utils/multer");
@@ -13,6 +13,9 @@ router.post('/create-fundraiser', upload.single('image'), async (req, res, next)
      
      const { city, category, amount, title, description } = req.body
 
+     if (city === '' || category === '' || amount === '' || title === '' || description === '') {
+          return res.json({msg: 'Please fill out all field', accepted: false})
+     }
      // Get user role & id
      let role 
      let user_id
@@ -40,6 +43,7 @@ router.post('/create-fundraiser', upload.single('image'), async (req, res, next)
                     category_id: category,
                     amount: amount,
                     image: result.secure_url,
+                    cloudinary_img_id: result.public_id,
                     title: title,
                     description: description,
                     isAccepted: true
@@ -53,6 +57,7 @@ router.post('/create-fundraiser', upload.single('image'), async (req, res, next)
                     category_id: category,
                     amount: amount,
                     image: result.secure_url,
+                    cloudinary_img_id: result.public_id,
                     title: title,
                     description: description,
                });
@@ -61,7 +66,7 @@ router.post('/create-fundraiser', upload.single('image'), async (req, res, next)
 
           // Save user
           await fundraiser.save();
-          res.json(fundraiser);
+          res.json({msg: 'The fundraiser has sent, wait for approved', accepted: true})
      } 
      catch (err) {
           console.log(err);
@@ -81,6 +86,10 @@ router.get('/get-fundraiser/:id', getFundraiserItem)
 
 // Payment
 router.post('/payment', payment)
+
+
+// Update Fundraiser
+router.post('/update-fundraiser/:id', updateFundraiser)
 
 
 module.exports = router

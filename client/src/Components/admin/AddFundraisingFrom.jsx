@@ -5,6 +5,8 @@ import MuiAlert from '@material-ui/lab/Alert';
 import Title from '../dashboard/Title';
 import useStyles from '../../Styles/ThemeStyle';
 import api from '../../Api/api';
+import Backdrop from '@material-ui/core/Backdrop';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 function Alert(props) {
      return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -14,6 +16,9 @@ export default function AddFundraisingFrom() {
      const classes = useStyles();
 
      const [open, setOpen] = useState(false);
+     const [openBackDrop, setOpenBackDrop] = useState(false);
+     const [msg, setMsg] = useState('');
+     const [accepted, setAccepted] = useState(false);
      const [city, setCity] = useState([]);
      const [category, setCategory] = useState([]);
      const [fundraiser, setFundraiser] = useState({
@@ -64,16 +69,26 @@ export default function AddFundraisingFrom() {
           data.append("image", fundraiser.image);
 
           api.post('create-fundraiser', data)
-          .then(resp => console.log(resp))
+          .then(resp => {
+               if(!resp.data.accepted) {
+                    handleCloseBackDrop()
+                    setMsg(resp.data.msg)
+                    setOpen(true)
+               }
+               if(resp.data.accepted) {
+                    handleCloseBackDrop()
+                    setAccepted(true)
+                    setMsg(resp.data.msg)
+                    setOpen(true)
+                    setTimeout(() => {
+                         window.location.href = '/dashboard'
+                    }, 1500);
+               }
+          })
           .catch((error) => alert(error))
      }
 
-     
-     // For Alert
-     const handleClick = () => {
-          setOpen(true);
-     };
-
+     // Alert 
      const handleClose = (event, reason) => {
           if (reason === 'clickaway') {
                return;
@@ -81,10 +96,19 @@ export default function AddFundraisingFrom() {
           setOpen(false);
      };
 
+     // Backdrop
+     const handleCloseBackDrop = () => {
+          setOpenBackDrop(false);
+     };
+
+     const handleToggleBackDrop = () => {
+          setOpenBackDrop(!open);
+     };
+
 
      return (
      <>
-          <Title>Recent Deposits {fundraiser.category}</Title>
+          <Title>Recent Deposits</Title>
           <form onSubmit={onSubmit}>
           <Grid container spacing={2}>
                
@@ -176,7 +200,7 @@ export default function AddFundraisingFrom() {
                     />
                </Grid>
 
-
+               {/* Submit Button */}
                <Grid item xs={4}>
                <Button
                     type="submit"
@@ -185,19 +209,23 @@ export default function AddFundraisingFrom() {
                     color="primary"
                     size="large"
                     className={classes.submit}
-                    onClick={handleClick}
+                    onClick={handleToggleBackDrop}
                >
                Create Fundraiser
                </Button>
-               {/* ******************************************************************** */}
+
+               {/************************ A L E R T ******************************/}
                <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success">
-                         The fundraiser created successfully, waiting for approving
+                    <Alert onClose={handleClose} severity={accepted ? "success" : "warning"}>
+                         {msg}
                     </Alert>
                </Snackbar>
-               {/* ******************************************************************** */}
+               {/********************* B A C K D R O P ***************************/}
+               <Backdrop className={classes.backdrop} open={openBackDrop}>
+                         <CircularProgress color="inherit" />
+                    </Backdrop>
+               {/*****************************************************************/}
                </Grid>
-
 
           </Grid>
           </form>

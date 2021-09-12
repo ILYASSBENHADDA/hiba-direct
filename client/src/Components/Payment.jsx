@@ -20,23 +20,9 @@ const Payment = ({name, fundraiserId}) => {
           const body = {
                token,
                price,
+               name,
                fundraiserId
           };
-          // const headers = {
-          //      "Content-Type": "application/json"
-          // };
-
-          // return fetch(`http://localhost:5000/api/payment`, {
-          //      method: "POST",
-          //      headers,
-          //      body: JSON.stringify(body)
-          // })
-          //      .then(response => {
-          //      console.log("RESPONSE ", response);
-          //      const { status } = response;
-          //      console.log("STATUS ", status);
-          //      })
-          //      .catch(error => console.log(error));
 
           api.post('payment', body)
           .then(response => {
@@ -102,7 +88,7 @@ const Payment = ({name, fundraiserId}) => {
                name={name}
                amount={price * 100}
                // shippingAddress
-               // billingAddress
+               billingAddress
           >
                <Button
                     style={{marginTop: 20, marginBottom: 15}}
@@ -111,6 +97,7 @@ const Payment = ({name, fundraiserId}) => {
                     variant="contained"
                     color="primary"
                     size="large"
+                    disabled={price === '' ? true : false}
                >
                DONATE NOW
                </Button>

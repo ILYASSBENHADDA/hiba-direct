@@ -3,26 +3,26 @@ import { useParams } from 'react-router-dom'
 import clsx from 'clsx';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Link from '@material-ui/core/Link';
-import AddIcon from '@material-ui/icons/Add';
 import Chip from '@material-ui/core/Chip';
 import PeopleOutlineIcon from '@material-ui/icons/PeopleOutline';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import DateIcon from '@material-ui/icons/CalendarTodayTwoTone';
+import CategoryIcon from '@material-ui/icons/LocalOffer';
 import Navbar from '../Components/Navbar';
 import Share from '../Components/Share';
 import Donate from '../Components/Payment';
 import Footer from '../Components/footer';
 import Copyright from '../Components/Copyright';
 import api from '../Api/api';
-import ShareIcon from '@material-ui/icons/Share';
-import { LinearProgress } from '@material-ui/core';
+import { CardMedia, LinearProgress } from '@material-ui/core';
 import Title from '../Components/dashboard/Title';
-
+import DateFormat from '../Utils/DateFormat';
+import pricePerCent from '../Utils/pricePerCent';
+import PriceFormat from '../Utils/PriceFormat';
 
 export default function Single() {
   const classes = useStyles();
@@ -31,11 +31,22 @@ export default function Single() {
   const [fundraiser, setFundraiser] = useState([])
   const { id } = useParams()
 
+  const getData = async () => {
+    try {
+      const respence = await api.get(`get-fundraiser/${id}`)
+      setFundraiser(respence.data)
+    } catch (error) {
+      alert(error)
+    }
+    // .then(resp => setFundraiser(resp.data))
+    // .catch((error) => alert(error))
+  }
   useEffect(() => {
-    api.get(`get-fundraiser/${id}`)
-    .then(resp => setFundraiser(resp.data))
-    .catch((error) => alert(error))
-  }, [id])
+    getData()
+  }, [])
+
+  // Total rest
+  const totalRest = fundraiser.amount - fundraiser.paid
 
   return (
     <>
@@ -48,21 +59,35 @@ export default function Single() {
             
             {/* Hedding */}
             <Grid item xs={12}>
-              <Typography component="h1" variant="h4">
+              <Typography style={{fontWeight: 500}} component="h1" variant="h4">
                 {fundraiser.title}
               </Typography>
             </Grid>
 
             {/* Image */}
             <Grid item xs={12} md={8} lg={7}>
-              <Paper className={fixedHeightPaper}>
+              {/* <Paper className={fixedHeightPaper}>
                 <img src={fundraiser.image} alt="" />
-              </Paper>
+              </Paper> */}
+              <CardMedia
+                style={{
+                  height: 0,
+                  paddingTop: '54%',
+                  borderRadius: 5,
+                }}
+                // className={classes.media}
+                image={fundraiser.image}
+                title={fundraiser.title}
+              />
             </Grid>
 
-            {/* Fundraiser Info */}
-            <Grid item xs={12} md={4} lg={5}>
-              <Paper className={fixedHeightPaper}>
+            {/* Donation Info */}
+            <Grid item xs={12} md={4} lg={5} 
+            // style={{position: 'relative'}}
+            >
+              <Paper className={fixedHeightPaper} 
+              // style={{position: 'fixed'}}
+              >
 
                 <Box style={{padding: 10}}>
                 {/* Amount & Progress */}
@@ -70,18 +95,18 @@ export default function Single() {
                   <span 
                   style={{fontWeight: 700, fontSize: 25, color: '#000'}}
                   >
-                    $300,000  
+                    {PriceFormat(fundraiser.paid)}
                   </span>  
-                    {' raised of $500,000 goal'}
+                    {` raised of ${PriceFormat(fundraiser.amount)} goal`}
                 </Typography>
 
                 <Box display="flex" alignItems="center">
                   <Box width="100%" mr={1}>
-                    <LinearProgress variant="determinate" value={50} />
+                    <LinearProgress variant="determinate" value={pricePerCent(fundraiser.amount, fundraiser.paid)} />
                   </Box>
                   <Box minWidth={35}>
                     <Typography variant="body2" color="textSecondary">
-                      {'50%'}
+                      {`%${pricePerCent(fundraiser.amount, fundraiser.paid)}`}
                     </Typography>
                   </Box>
                 </Box>
@@ -92,7 +117,7 @@ export default function Single() {
                   <Chip
                     variant="outlined"
                     icon={<PeopleOutlineIcon />}
-                    label='100 Donors'
+                    label={`${fundraiser.donors} Donors`}
                     color="primary"
                   />
                 </Box>
@@ -101,15 +126,15 @@ export default function Single() {
                 {/* Amount details */}
                 <Box display="flex" alignItems="center" style={{marginTop: 25, marginBottom: 20, borderBottom: '1 solid #c8c8c8'}}>
                   <Box width="33%">
-                    <Typography component="h1" variant="h6">$100,00</Typography>
+                    <Typography component="h1" variant="h6">{PriceFormat(fundraiser.amount)}</Typography>
                     Total amount
                   </Box>
                   <Box width="33%">
-                    <Typography component="h1" variant="h6">$10,00</Typography>
+                    <Typography component="h1" variant="h6">{PriceFormat(fundraiser.paid)}</Typography>
                     Total raised
                   </Box>
                   <Box width="33%">
-                    <Typography component="h1" variant="h6">$90,00</Typography>
+                    <Typography component="h1" variant="h6">{PriceFormat(totalRest)}</Typography>
                     Total rest
                   </Box>
                 </Box>
@@ -123,28 +148,39 @@ export default function Single() {
               </Paper>
             </Grid>
             
-            {/* Recent Orders */}
-            <Grid item xs={12}>
+            {/* Details Infos */}
+            <Grid item xs={12} md={8} lg={7} style={{marginBottom: 30}}>
               <Paper className={classes.paper}>
-                <Title>Details Fundraising:</Title>
+                <Title>Details informations:</Title>
                 <Box>
-                    <Typography>
-                      Organisation:
-                    </Typography>
                   <Chip
                     variant="outlined"
                     icon={<AccountCircleIcon />}
-                    label='Ilyass Benhadda'
+                    label={'Ilyass Benhadda'}
+                    color="primary"
+                  />
+                </Box>
+                <Box style={{marginTop: 12, marginBottom: 12}}>
+                  <Chip
+                    style={{marginRight: 10}}
+                    size='small'
+                    variant="outlined"
+                    icon={<DateIcon />}
+                    label={DateFormat(fundraiser.publishDate)}
+                    color="primary"
+                  />
+                  <Chip
+                    size='small'
+                    variant="outlined"
+                    icon={<CategoryIcon />}
+                    label={'School'}
                     color="primary"
                   />
                 </Box>
                 <Box>
-                    <Typography>
-                      Description:
-                    </Typography>
-                    <Typography>
-                      {fundraiser.description}
-                    </Typography>
+                  <Typography>
+                    {fundraiser.description}
+                  </Typography>
                 </Box>
               </Paper>
             </Grid>
