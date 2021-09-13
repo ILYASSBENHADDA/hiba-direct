@@ -9,6 +9,7 @@ import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
 import AddFundraisingFrom from '../../Components/admin/AddFundraisingFrom';
 import Copyright from '../../Components/Copyright';
 import MuiAlert from '@material-ui/lab/Alert';
+import { Helmet } from 'react-helmet';
 
 
 function Alert(props) {
@@ -22,6 +23,12 @@ export default function AddFundraiser() {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
+    <>
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{'Start a new fundraising - Hiba Direct'}</title>
+    </Helmet>
+
     <div className={classes.root}>
 
       {/* HERE NAV & SIDE BAR */}
@@ -57,6 +64,7 @@ export default function AddFundraiser() {
       {/* END CONTENT */}
 
     </div>
+  </>
   );
 }
 

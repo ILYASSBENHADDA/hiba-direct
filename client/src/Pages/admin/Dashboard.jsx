@@ -14,15 +14,15 @@ import AddIcon from '@material-ui/icons/Add';
 import Copyright from '../../Components/Copyright';
 // Context Api 
 import { UserContext } from "../../Context/UserContext"
-import Chart from '../../Components/admin/Chart';
 import api from '../../Api/api';
 import PriceFormat from '../../Utils/PriceFormat';
+import { Helmet } from 'react-helmet';
 
 
 export default function Dashboard() {
   const classes = useStyles();
   const [statistic, setStatistic] = useState('')
-  const { infos:{isAuth, role}} = useContext(UserContext)
+  const { infos:{ role }} = useContext(UserContext)
 
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -34,8 +34,13 @@ export default function Dashboard() {
   }, [])
 
   return (
+    <>
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{'Dashboard'}</title>
+    </Helmet>
+    
     <div className={classes.root}>
-
       {/* HERE NAV & SIDE BAR */}
       <NavAndSideBar />
 
@@ -115,6 +120,7 @@ export default function Dashboard() {
       {/* END CONTENT */}
 
     </div>
+  </>
   );
 }
 

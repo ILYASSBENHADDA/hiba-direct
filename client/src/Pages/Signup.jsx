@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Typography from '@material-ui/core/Typography';
@@ -14,6 +13,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import MuiAlert from '@material-ui/lab/Alert';
 import { Snackbar } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 
 function Alert(props) {
      return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -66,6 +66,12 @@ const handleClose = (event, reason) => {
 
 return (
      <>
+     {/* REACT HELMET */}
+     <Helmet>
+          <title>{'Sign Up - Hiba Direct'}</title>
+     </Helmet>
+
+     {/* NAVIGATION BAR */}
      <Navbar />
      <Container component="main" maxWidth="xs">
           <div className={classes.paper}>

@@ -5,3 +5,9 @@ body {
      -webkit-font-smoothing: antialiased;
      -moz-osx-smoothing: grayscale;
 }
+
+
+.MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child {
+     padding-left: 50px !important;
+     color: #fff;
+}

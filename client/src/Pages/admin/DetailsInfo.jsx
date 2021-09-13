@@ -8,6 +8,7 @@ import Paper from '@material-ui/core/Paper';
 import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
 import Copyright from '../../Components/Copyright';
 import Review from '../../Components/admin/Review';
+import { Helmet } from 'react-helmet';
 
 
 export default function ReqList() {
@@ -16,8 +17,13 @@ export default function ReqList() {
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
   return (
-    <div className={classes.root}>
+    <>
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{'Review post - Hiba Direct'}</title>
+    </Helmet>
 
+    <div className={classes.root}>
       {/* HERE NAV & SIDE BAR */}
       <NavAndSideBar />
 
@@ -47,6 +53,7 @@ export default function ReqList() {
       {/* END CONTENT */}
 
     </div>
+  </>
   );
 }
 

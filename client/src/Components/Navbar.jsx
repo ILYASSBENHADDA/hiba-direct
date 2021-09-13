@@ -23,12 +23,13 @@ import { UserContext } from "../Context/UserContext"
 import api from '../Api/api';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
+import DashboardIcon from '@material-ui/icons/Dashboard';
+import logo from '../Assets/images/logo.png';
 
 export default function Navbar() {
      const classes = useStyles();
      const { infos:{isAuth, role}} = useContext(UserContext)
      const [fundraiser, setFundraiser] = useState([])
-     const [value, setValue] = useState('')
 
      useEffect(() => {
           api.get('get-fundraiser')
@@ -42,8 +43,8 @@ export default function Navbar() {
      }
 
 
-     const [anchorEl, setAnchorEl] = React.useState(null);
-     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
+     const [anchorEl, setAnchorEl] = useState(null);
+     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
 
      const isMenuOpen = Boolean(anchorEl);
      const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -76,9 +77,9 @@ export default function Navbar() {
           open={isMenuOpen}
           onClose={handleMenuClose}
      >
-          <MenuItem onClick={() => window.location.href = "/dashboard"}>Profile</MenuItem>
-          <MenuItem onClick={() => window.location.href = "/dashboard"}>Your fundraisers</MenuItem>
+          <MenuItem onClick={() => window.location.href = "/dashboard"}>Dashboard</MenuItem>
           <MenuItem onClick={() => window.location.href = "/add-fundraiser"}>Start a new fundraiser</MenuItem>
+          <MenuItem onClick={() => window.location.href = "/payments"}>Payments</MenuItem>
           <MenuItem onClick={() => window.location.href = "/logout"}>Sign out</MenuItem>
      </Menu>
      );
@@ -94,7 +95,8 @@ export default function Navbar() {
           open={isMobileMenuOpen}
           onClose={handleMobileMenuClose}
      >
-
+          {isAuth ? 
+          <>
           {/* item mobile */}
           <MenuItem onClick={handleProfileMenuOpen}>
           <IconButton
@@ -103,18 +105,31 @@ export default function Navbar() {
                aria-haspopup="true"
                color="inherit"
           >
-               <AccountCircle />
+               <DashboardIcon />
           </IconButton>
-          <p>Profile</p>
+          <p>Dashboard</p>
           </MenuItem>
 
           {/* item mobile */}
-          <MenuItem>
+          <MenuItem onClick={() => window.location.href = "/logout"}>
           <IconButton color="inherit">
                <ExitToAppIcon />
           </IconButton>
           <p>Sign out</p>
           </MenuItem>
+
+          </> : <>
+
+          {/* item mobile */}
+          <MenuItem onClick={() => window.location.href = "/sign-up"}>
+          <p>Sign up</p>
+          </MenuItem>
+
+          {/* item mobile */}
+          <MenuItem onClick={() => window.location.href = "/sign-in"}>
+          <p>Sign in</p>
+          </MenuItem>
+          </>}
      </Menu>
      );
 
@@ -122,26 +137,18 @@ export default function Navbar() {
      <div className={classes.grow}>
           <AppBar position="static">
           <Toolbar>
-               <IconButton
-                    edge="start"
-                    className={classes.menuButton}
-                    color="inherit"
-                    aria-label="open drawer"
-               >
-                    <MenuIcon />
-               </IconButton>
                
-               <Typography className={classes.title} variant="h6" noWrap>
-                    HIBA DIRECT {value}
-               </Typography>
+               {/* LOGO */}
+               <div style={{paddingTop: 2, cursor: 'pointer'}}>
+                    <img src={logo} alt="" width="230px" onClick={() => window.location.href = "/"}/>
+               </div>
 
                {/* START SEARCH BAR */}
                <div className={classes.search} style={{ width: 300 }}>
-                    {/* <div className={classes.searchIcon}>
+                    <div className={classes.searchIcon}>
                          <SearchIcon />
-                    </div> */}
+                    </div>
                     <Autocomplete
-                         style={{ color: "#ffffff" }}
                          options={fundraiser}
                          // autoHighlight
                          freeSolo
@@ -154,10 +161,8 @@ export default function Navbar() {
                          renderInput={(params) => (
                               <TextField
                               {...params}
-                              color="secondary"
                               style={{ color: "#ffffff" }}
                               size='small'
-                              // color='secondary'
                               placeholder="Search.."
                               variant="outlined"
                               />
@@ -169,21 +174,29 @@ export default function Navbar() {
                <div className={classes.grow} />
                <div className={classes.sectionDesktop}>
                     
+                    {isAuth ? 
+                    <>
                     {/* item web */}
                     <Button 
                     color="inherit"
-                    startIcon={<AccountCircle />}
+                    startIcon={<DashboardIcon />}
                     endIcon={<ArrowDropDownIcon />}
                     onClick={handleProfileMenuOpen}
                     >
-                         Profile
+                         Dashboard
                     </Button>
 
                     {/* item web */}
-                    <IconButton color="inherit">
-                         <ExitToAppIcon />
-                    </IconButton>
+                    <Button 
+                    color="inherit"
+                    startIcon={<ExitToAppIcon />}
+                    onClick={() => window.location.href = "/sign-up"}
+                    >
+                         Sign out
+                    </Button>
 
+                    </> : <>
+                    
                     {/* item web */}
                     <Button 
                      color="inherit"
@@ -195,13 +208,13 @@ export default function Navbar() {
                     {/* item web */}
                     <Button
                      onClick={() => window.location.href = "/sign-in"}
-                     size="small"
                      variant="outlined"
                      color="primary"
                      style={{ background: "#ffffff", marginLeft: 10 }}
                     >
                          Sign in
                     </Button>
+                    </>}
 
                </div>
                <div className={classes.sectionMobile}>

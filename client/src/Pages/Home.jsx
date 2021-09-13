@@ -1,5 +1,4 @@
-import React, {useEffect, useState, useContext} from 'react';
-import Button from '@material-ui/core/Button';
+import React, {useEffect, useState} from 'react';
 import Card from '@material-ui/core/Card';
 import Box from '@material-ui/core/Box';
 import CardContent from '@material-ui/core/CardContent';
@@ -21,15 +20,13 @@ import DateFormat from '../Utils/DateFormat';
 import PriceFormat from '../Utils/PriceFormat';
 import coverImg from '../Assets/images/cover.png';
 import pricePerCent from '../Utils/pricePerCent';
-import { UserContext } from "../Context/UserContext"
 import Header from '../Components/Header';
+import { Helmet } from 'react-helmet';
 
 
 
 export default function Home() {
   const classes = useStyles();
-  const { infos:{isAuth, role}} = useContext(UserContext)
-
 
   const [fundraiser, setFundraiser] = useState([])
   
@@ -41,10 +38,16 @@ export default function Home() {
 
   return (
     <>
-      <Navbar />
-      
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{'Hiba Direct - Platform For Donations'}</title>
+    </Helmet>
+    
+    {/* NAVIGATION BAR */}
+    <Navbar />
+    
       <main>
-        {/* Header */}
+        {/* HEADER */}
         <Container maxWidth="lg">
           <main style={{marginTop: 30}}>
             <Header />
@@ -52,7 +55,7 @@ export default function Home() {
         </Container>
                 
         <Container className={classes.cardGrid} maxWidth="md">
-          {/* Cards */}
+          {/* CARDS */}
           <Grid container spacing={4}>
             {fundraiser.map((item, key) => (
               item.isFreezed ? null : <>

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import Link from '@material-ui/core/Link';
 import Grid from '@material-ui/core/Grid';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import Typography from '@material-ui/core/Typography';
@@ -14,6 +13,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik'
 import * as Yup from 'yup'
 import MuiAlert from '@material-ui/lab/Alert';
 import { Snackbar } from '@material-ui/core';
+import { Helmet } from 'react-helmet';
 
 function Alert(props) {
      return <MuiAlert elevation={6} variant="filled" {...props} />
@@ -69,7 +69,15 @@ const handleClose = (event, reason) => {
 
 return (
      <>
+     {/* REACT HELMET */}
+     <Helmet>
+          <title>{'Sign In - Hiba Direct'}</title>
+     </Helmet>
+
+     {/* NAVIGATION BAR */}
      <Navbar />
+
+     {/* CONTENT */}
      <Container component="main" maxWidth="xs">
           <div className={classes.paper}>
                <Avatar className={classes.avatar}>
@@ -135,56 +143,6 @@ return (
                </Alert>
                </Snackbar>
 
-               {/* -V 222222222222222222222222222222222222 */}
-
-               {/* <form onSubmit={onSubmit} className={classes.form}>
-                    <Grid container spacing={2}>
-
-                    <Grid item xs={12}>
-                    <TextField
-                    required
-                         variant="outlined"
-                         fullWidth
-                         label="Email Address"
-                         name="email"
-                         type="email"
-                         autoFocus
-                         onChange={onChange}
-                    />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                    <TextField
-                         variant="outlined"
-                         required
-                         fullWidth
-                         name="password"
-                         label="Password"
-                         type="password"
-                         onChange={onChange}
-                    />
-                    </Grid>
-
-                    </Grid>
-                    <Button
-                         type="submit"
-                         fullWidth
-                         variant="contained"
-                         color="primary"
-                         size="large"
-                         className={classes.submit}
-                    >
-                    Sign In
-                    </Button>
-                    
-                    <Grid container justifyContent="flex-end">
-                    <Grid item>
-                    <Link href="/sign-up" variant="body2">
-                         have not account? Sign Up
-                    </Link>
-                    </Grid>
-                    </Grid>
-               </form> */}
           </div>
      </Container>
      </>

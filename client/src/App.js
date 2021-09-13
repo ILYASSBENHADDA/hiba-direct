@@ -2,6 +2,8 @@ import Routers from "./Routes/Routes"
 import { BrowserRouter as Router} from 'react-router-dom'
 import { createTheme, ThemeProvider } from '@material-ui/core'
 import { UserProvider } from "./Context/UserContext"
+import { Helmet } from "react-helmet"
+import favicon from "./Assets/images/favicon.png"
 
 
 const theme = createTheme({
@@ -22,7 +24,9 @@ const theme = createTheme({
 function App() {
   return (
     <>
-    
+    <Helmet>
+      <link rel="icon" href={favicon} />
+    </Helmet>
     <ThemeProvider theme={theme}>
       <UserProvider>
         <Router>

@@ -7,14 +7,20 @@ import Paper from '@material-ui/core/Paper';
 import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
 import PaymentList from '../../Components/admin/PaymentList';
 import Copyright from '../../Components/Copyright';
+import { Helmet } from 'react-helmet';
 
 
 export default function Payment() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <>
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{'Payments - Hiba Direct'}</title>
+    </Helmet>
 
+    <div className={classes.root}>
       {/* HERE NAV & SIDE BAR */}
       <NavAndSideBar />
 
@@ -42,6 +48,7 @@ export default function Payment() {
       {/* END CONTENT */}
 
     </div>
+  </>
   );
 }
 

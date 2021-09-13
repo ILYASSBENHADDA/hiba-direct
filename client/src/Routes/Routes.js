@@ -12,8 +12,6 @@ import DetailsInfo from '../Pages/admin/DetailsInfo'
 import AddCity from '../Pages/admin/AddCity'
 import AddCategory from '../Pages/admin/AddCategory'
 import Payment from '../Pages/admin/Payment'
-import Blog from '../Pages/blog/Blog'
-import SingleBlog from '../Pages/blog/SingleBlog'
 import Users from '../Pages/admin/Users'
 // Protected Routes
 // import { AuthRouter, AdminRouter, UserRouter } from './ProtectedRoutes'
@@ -34,8 +32,6 @@ function Routes() {
                     <Route exact path="/" component={Home}/>
                     <Route exact path="/post/:id" component={Single}/>
                     <Route exact path="/logout" component={Logout}/>
-                    <Route exact path="/blog" component={Blog}/>
-                    <Route exact path="/blog/:id" component={SingleBlog}/>
                     
                     {/* Authentication */}
                     {isAuth ? null

@@ -23,6 +23,7 @@ import Title from '../Components/dashboard/Title';
 import DateFormat from '../Utils/DateFormat';
 import pricePerCent from '../Utils/pricePerCent';
 import PriceFormat from '../Utils/PriceFormat';
+import {Helmet} from 'react-helmet';
 
 export default function Single() {
   const classes = useStyles();
@@ -50,7 +51,14 @@ export default function Single() {
 
   return (
     <>
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{fundraiser.title}</title>
+    </Helmet>
+
+    {/* NAVIGATION BAR */}
     <Navbar />
+    
     {/* CONTENT */}
     <main className={classes.content}>
         <div className={classes.appBarSpacer} />

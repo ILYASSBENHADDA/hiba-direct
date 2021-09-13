@@ -8,6 +8,7 @@ import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
 import CityList from '../../Components/admin/CityList';
 import AddCityForm from '../../Components/admin/AddCityForm';
 import Copyright from '../../Components/Copyright';
+import { Helmet } from 'react-helmet';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,8 +37,13 @@ export default function AddCity() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <>
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{'Add a new city - Hiba Direct'}</title>
+    </Helmet>
 
+    <div className={classes.root}>
       {/* HERE NAV & SIDE BAR */}
       <NavAndSideBar />
 
@@ -70,5 +76,6 @@ export default function AddCity() {
       {/* END CONTENT */}
 
     </div>
+  </>
   );
 }

@@ -8,6 +8,7 @@ import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
 import CategoryList from '../../Components/admin/CategoryList';
 import AddCategotyForm from '../../Components/admin/AddCategoryForm';
 import Copyright from '../../Components/Copyright';
+import { Helmet } from 'react-helmet';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -36,8 +37,13 @@ export default function AddCategory() {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <>
+    {/* REACT HELMET */}
+    <Helmet>
+      <title>{'Add a new category - Hiba Direct'}</title>
+    </Helmet>
 
+    <div className={classes.root}>
       {/* HERE NAV & SIDE BAR */}
       <NavAndSideBar />
 
@@ -70,5 +76,6 @@ export default function AddCategory() {
       {/* END CONTENT */}
 
     </div>
+  </>
   );
 }

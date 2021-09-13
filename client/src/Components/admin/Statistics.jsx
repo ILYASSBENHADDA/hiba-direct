@@ -3,6 +3,7 @@ import Link from '@material-ui/core/Link';
 import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from '../dashboard/Title';
+import DateFormat from '../../Utils/DateFormat';
 
 function preventDefault(event) {
   event.preventDefault();
@@ -23,7 +24,7 @@ export default function Deposits({title, number}) {
         {number}
       </Typography>
       <Typography color="textSecondary" className={classes.depositContext}>
-        on 15 March, 2019
+        on {DateFormat(new Date())}
       </Typography>
       <div>
         <Link color="primary" href="#" onClick={preventDefault}>
