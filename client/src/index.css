@@ -11,3 +11,23 @@ body {
      padding-left: 50px !important;
      color: #fff;
 }
+
+
+/* media queries */
+@media (max-width: 600px) {
+     .logo {
+          display: none;
+     }
+}
+
+
+/* media queries */
+@media (max-width: 545px) {
+     .makeStyles-amountDetails-5 {
+          display: block !important;
+     }
+
+     .m1{
+          margin-bottom: 15px;
+     }
+}

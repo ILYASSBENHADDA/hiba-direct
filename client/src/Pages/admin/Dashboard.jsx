@@ -50,6 +50,7 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           {/* End Add Fundraiser Button */}
           <Button
+            onClick={() => window.location.href = "/add-fundraiser"}
             style={{marginBottom: 20}}
             variant="contained"
             color="primary"
@@ -67,25 +68,25 @@ export default function Dashboard() {
             {/* Recent Statistics (ADMIN) */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Statistics title={'Fundraiser Accepted'} number={statistic.fundraiserApprovedCount} />
+                <Statistics title={'Fundraiser Accepted'} number={statistic.fundraiserApprovedCount} link={'/dashboard'}/>
               </Paper>
             </Grid>
 
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Statistics title={'Fundraiser Pending'} number={statistic.fundraiserPendingCount}/>
+                <Statistics title={'Fundraiser Pending'} number={statistic.fundraiserPendingCount} link={'/dashboard'}/>
               </Paper>
             </Grid>
 
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Statistics title={'Total Users'} number={statistic.UsersCount}/>
+                <Statistics title={'Total Users'} number={statistic.UsersCount} link={'/users'}/>
               </Paper>
             </Grid>
 
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Statistics title={'Total paid'} number={PriceFormat(statistic.PaidXCount)}/>
+                <Statistics title={'Total paid'} number={PriceFormat(statistic.PaidXCount)} link={'/payments'}/>
               </Paper>
             </Grid>
             

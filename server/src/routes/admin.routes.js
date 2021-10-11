@@ -1,5 +1,5 @@
 const express = require('express')
-const { confirmFundraiser, getFundraiserNull, addCity, addCategory, getCity, getCategory, getPayment, freezeFundraiser, deleteFundraiser, statistics } = require('../controllers/admin')
+const { confirmFundraiser, getFundraiserNull, addCity, addCategory, getCity, getCategory, getPayment, freezeFundraiser, deleteFundraiser, statistics, getUser } = require('../controllers/admin')
 const router = express.Router()
 
 // Confirm Fundraiser
@@ -31,6 +31,9 @@ router.get('/get-payment', getPayment)
 
 // Get statistics
 router.get('/statistics', statistics)
+
+// Get users
+router.get('/get-users', getUser)
 
 
 module.exports = router

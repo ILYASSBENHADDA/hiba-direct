@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
-import Link from '@material-ui/core/Link';
 import { Button } from '@material-ui/core';
 import { UserContext } from "../Context/UserContext"
 import ImageBg from "../Assets/images/header-bg.jpg"
@@ -45,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
 const post = {
      title: 'Fundraising for the people',
      description:
-       "` Never underestimate the difference you can make in the lives of others. Step forward, reach out, and help. Reach out to someone that might need a lift. ` — Pablo",
+       "“ Never underestimate the difference you can make in the lives of others. Step forward, reach out, and help. Reach out to someone that might need a lift. ” — Pablo",
      image: ImageBg,
      imgText: 'main image description',
      linkText: 'Continue reading…',
@@ -53,7 +52,7 @@ const post = {
 
 export default function Header() {
   const classes = useStyles();
-  const { infos:{isAuth, role}} = useContext(UserContext)
+  const { infos:{ isAuth }} = useContext(UserContext)
   return (
     <Paper className={classes.mainFeaturedPost} style={{ backgroundImage: `url(${post.image})` }}>
       {/* Increase the priority of the hero background image */}
@@ -103,43 +102,3 @@ export default function Header() {
 Header.propTypes = {
   post: PropTypes.object,
 };
-
-
-
-
-
-
-{/* Hero unit */}
-        {/* <div className={classes.heroContent}>
-          <Container maxWidth="sm">
-            <Typography component="h1" variant="h3" align="center" color="textPrimary" gutterBottom>
-              Fundraising for the people
-            </Typography>
-            <Typography variant="h5" align="center" color="textPrimary" paragraph>
-            &quot;Never underestimate the difference you can make in the lives of others. 
-              Step forward, reach out, and help. Reach out to someone that might need a lift.&quot; — Pablo
-            </Typography>
-            <div className={classes.heroButtons}>
-              <Grid container spacing={2} justifyContent="center">
-                {isAuth ? 
-                <Grid item>
-                  <Button variant="contained" color="primary" onClick={() => window.location.href = "/add-fundraiser"}>
-                    Start a new fundraising
-                  </Button>
-                </Grid>
-                : <>
-                <Grid item>
-                  <Button variant="contained" color="primary" onClick={() => window.location.href = "/sign-up"}>
-                    Sign up now
-                  </Button>
-                </Grid>
-                <Grid item>
-                  <Button variant="outlined" color="primary" onClick={() => window.location.href = "/sign-in"}>
-                    Sign in
-                  </Button>
-                </Grid>
-                </>}
-              </Grid>
-            </div>
-          </Container>
-        </div> */}

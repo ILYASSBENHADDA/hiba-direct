@@ -9,9 +9,6 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Title from '../dashboard/Title';
 import api from '../../Api/api';
-import IconButton from '@material-ui/core/IconButton';
-import NotValid from '@material-ui/icons/NotInterested';
-import Valid from '@material-ui/icons/Check';
 import Chip from '@material-ui/core/Chip';
 import DateFormat from '../../Utils/DateFormat';
 

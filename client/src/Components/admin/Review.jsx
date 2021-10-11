@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
-import Link from '@material-ui/core/Link';
 import { Grid, TextField, Button, Snackbar, FormLabel, Box, CardMedia } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 import Title from '../dashboard/Title';
@@ -9,7 +8,6 @@ import api from '../../Api/api';
 import FreezeIcon from '@material-ui/icons/AcUnit';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import UpdateIcon from '@material-ui/icons/Update';
-import OpenLink from '@material-ui/icons/OpenInNew';
 
 function Alert(props) {
      return <MuiAlert elevation={6} variant="filled" {...props} />;
@@ -124,16 +122,12 @@ export default function Review() {
                     />
                </Grid>
                
-               <Grid item xs={12}>
+               {/* <Grid item xs={12}>
                     <FormLabel>Username</FormLabel>
                     <TextField
                          variant="outlined"
                          fullWidth
-                         // value={fundraiser.user_id.first_name}
-                         // InputProps={{
-                         //      readOnly: true,
-                         // }}
-                         // defaultValue='kkdndf'
+                         defaultValue='kkdndf'
                     />
                </Grid>
 
@@ -142,11 +136,10 @@ export default function Review() {
                     <TextField
                          variant="outlined"
                          fullWidth
-                         // value={fundraiser.city_id.name}
-                         // InputProps={{
-                         //      readOnly: true,
-                         // }}
-                         // defaultValue='kkdndf'
+                         value={fundraiser.city_id.name}
+                         InputProps={{
+                              readOnly: true,
+                         }}
                     />
                </Grid>
 
@@ -155,9 +148,9 @@ export default function Review() {
                     <TextField
                          variant="outlined"
                          fullWidth
-                         // value={fundraiser.category_id.name}
+                         value={fundraiser.category_id.name}
                     />
-               </Grid>
+               </Grid> */}
 
                <Grid item xs={12}>
                     <FormLabel>Amount</FormLabel>

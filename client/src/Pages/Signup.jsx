@@ -162,72 +162,7 @@ return (
                </Alert>
                </Snackbar>
 
-               {/********************************/}
-               {/* <form onSubmit={onSubmit} className={classes.form} noValidate>
-                    <Grid container spacing={2}>
-                    <Grid item xs={12} sm={6}>
-                    <TextField
-                         name="first_name"
-                         variant="outlined"
-                         fullWidth
-                         label="First Name"
-                         autoFocus
-                         onChange={onChange}
-                    />
-                    </Grid>
 
-                    <Grid item xs={12} sm={6}>
-                    <TextField
-                         variant="outlined"
-                         fullWidth
-                         label="Last Name"
-                         name="last_name"
-                         onChange={onChange}
-                    />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                    <TextField
-                         variant="outlined"
-                         fullWidth
-                         label="Email Address"
-                         name="email"
-                         onChange={onChange}
-                    />
-                    </Grid>
-
-                    <Grid item xs={12}>
-                    <TextField
-                         variant="outlined"
-                         // required
-                         fullWidth
-                         name="password"
-                         label="Password"
-                         type="password"
-                         onChange={onChange}
-                    />
-                    </Grid>
-
-                    </Grid>
-                    <Button
-                         type="submit"
-                         fullWidth
-                         variant="contained"
-                         color="primary"
-                         size="large"
-                         className={classes.submit}
-                    >
-                    Sign Up
-                    </Button>
-                    
-                    <Grid container justifyContent="flex-end">
-                    <Grid item>
-                    <Link href="sign-in" variant="body2">
-                         Already have an account? Sign in
-                    </Link>
-                    </Grid>
-                    </Grid>
-               </form> */}
           </div>
      </Container>
      </>

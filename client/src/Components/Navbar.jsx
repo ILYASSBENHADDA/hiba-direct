@@ -2,21 +2,12 @@ import React, {useContext, useState, useEffect} from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
-import Typography from '@material-ui/core/Typography';
-import InputBase from '@material-ui/core/InputBase';
-import Badge from '@material-ui/core/Badge';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import AccountCircle from '@material-ui/icons/AccountCircle';
-import MailIcon from '@material-ui/icons/Mail';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import MoreIcon from '@material-ui/icons/MoreVert';
-import Link from '@material-ui/core/Link';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
-
 import useStyles from '../Styles/ThemeStyle';
 import { Button } from '@material-ui/core';
 import { UserContext } from "../Context/UserContext"
@@ -28,7 +19,7 @@ import logo from '../Assets/images/logo.png';
 
 export default function Navbar() {
      const classes = useStyles();
-     const { infos:{isAuth, role}} = useContext(UserContext)
+     const { infos:{ role, isAuth }} = useContext(UserContext)
      const [fundraiser, setFundraiser] = useState([])
 
      useEffect(() => {
@@ -79,7 +70,9 @@ export default function Navbar() {
      >
           <MenuItem onClick={() => window.location.href = "/dashboard"}>Dashboard</MenuItem>
           <MenuItem onClick={() => window.location.href = "/add-fundraiser"}>Start a new fundraiser</MenuItem>
+          {role === 'Admin' ? 
           <MenuItem onClick={() => window.location.href = "/payments"}>Payments</MenuItem>
+          : null}
           <MenuItem onClick={() => window.location.href = "/logout"}>Sign out</MenuItem>
      </Menu>
      );
@@ -140,7 +133,7 @@ export default function Navbar() {
                
                {/* LOGO */}
                <div style={{paddingTop: 2, cursor: 'pointer'}}>
-                    <img src={logo} alt="" width="230px" onClick={() => window.location.href = "/"}/>
+                    <img src={logo} className="logo" alt="Logo" width="230px" onClick={() => window.location.href = "/"}/>
                </div>
 
                {/* START SEARCH BAR */}
@@ -190,13 +183,13 @@ export default function Navbar() {
                     <Button 
                     color="inherit"
                     startIcon={<ExitToAppIcon />}
-                    onClick={() => window.location.href = "/sign-up"}
+                    onClick={() => window.location.href = "/logout"}
                     >
                          Sign out
                     </Button>
 
                     </> : <>
-                    
+
                     {/* item web */}
                     <Button 
                      color="inherit"

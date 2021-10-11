@@ -5,17 +5,13 @@ import Typography from '@material-ui/core/Typography';
 import Title from '../dashboard/Title';
 import DateFormat from '../../Utils/DateFormat';
 
-function preventDefault(event) {
-  event.preventDefault();
-}
-
 const useStyles = makeStyles({
   depositContext: {
     flex: 1,
   },
 });
 
-export default function Deposits({title, number}) {
+export default function Deposits({title, number, link}) {
   const classes = useStyles();
   return (
     <React.Fragment>
@@ -27,8 +23,8 @@ export default function Deposits({title, number}) {
         on {DateFormat(new Date())}
       </Typography>
       <div>
-        <Link color="primary" href="#" onClick={preventDefault}>
-          View balance
+        <Link color="primary" href={link}>
+          View Details
         </Link>
       </div>
     </React.Fragment>

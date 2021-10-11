@@ -14,7 +14,7 @@ import { UserContext } from "../../Context/UserContext"
 
 export const MainListItems = () => {
 
-  const { infos:{isAuth, role}} = useContext(UserContext)
+  const { infos:{ role }} = useContext(UserContext)
 
   return (
   <div>

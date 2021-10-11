@@ -9,12 +9,12 @@ import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
-import Badge from '@material-ui/core/Badge';
 import MenuIcon from '@material-ui/icons/Menu';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import NotificationsIcon from '@material-ui/icons/Notifications';
 import { MainListItems, secondaryListItems } from './listItems';
 import { UserContext } from "../../Context/UserContext"
+import { Button } from '@material-ui/core';
+import ArrowForwardIcon from '@material-ui/icons/ArrowForward';
 
 
 const drawerWidth = 240;
@@ -29,7 +29,7 @@ const NavAndSideBar = () => {
        setOpen(false);
      };
 
-     const { infos:{isAuth, role}} = useContext(UserContext)
+     const { infos:{ role }} = useContext(UserContext)
 
      return (
           <>
@@ -50,11 +50,13 @@ const NavAndSideBar = () => {
                <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
                Dashboard
                </Typography>
-               <IconButton color="inherit">
-               <Badge badgeContent={4} color="secondary">
-               <NotificationsIcon />
-               </Badge>
-               </IconButton>
+               <Button 
+               color="inherit"
+               endIcon={<ArrowForwardIcon />}
+               onClick={() => window.location.href = "/"}
+               >
+                    Go Back Home
+               </Button>
           </Toolbar>
           </AppBar>
           {/* End Navbar Dashboard */}

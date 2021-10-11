@@ -22,6 +22,7 @@ import coverImg from '../Assets/images/cover.png';
 import pricePerCent from '../Utils/pricePerCent';
 import Header from '../Components/Header';
 import { Helmet } from 'react-helmet';
+import CategoryIcon from '@material-ui/icons/LocalOffer';
 
 
 
@@ -87,8 +88,8 @@ export default function Home() {
                       <Chip
                         variant="outlined"
                         size="small"
-                        icon={<PostTime />}
-                        label={DateFormat(item.publishDate)}
+                        icon={<CategoryIcon />}
+                        label={item.category_id.name}
                         color="primary"
                       />
                     </Box>

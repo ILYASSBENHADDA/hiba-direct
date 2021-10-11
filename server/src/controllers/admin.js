@@ -158,9 +158,15 @@ exports.freezeFundraiser = (req, res) => {
 */
 exports.deleteFundraiser = async (req, res) => {
      const { id } = req.body
-     const fund = await Fundraiser.findById(id) 
 
-     await cloudinary.uploader.destroy(fund.cloudinary_img_id)
+     try {
+          const fund = await Fundraiser.findById(id) 
+
+          await cloudinary.uploader.destroy(fund.cloudinary_img_id)
+     } catch (error) {
+          console.log(error)
+     }
+     
 
      Fundraiser.findByIdAndRemove(id)
      .then(() => {
@@ -193,4 +199,18 @@ exports.statistics = async (req, res) => {
      const fundraiserPendingCount = await Fundraiser.find({isAccepted: null}).countDocuments()
 
      return res.json({UsersCount, PaidXCount, fundraiserApprovedCount, fundraiserPendingCount})     
+}
+
+
+/*
+     Get user
+*/
+exports.getUser = (req, res) => {
+     
+     Users.find()
+     .sort({"_id": -1})
+     .then(data => {
+          return res.json(data)
+     })
+
 }

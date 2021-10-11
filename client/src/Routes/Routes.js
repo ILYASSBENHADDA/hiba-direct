@@ -41,7 +41,7 @@ function Routes() {
                     </>}
 
                     {/* Admin & User Routes */}
-                    {!isAuth ? null
+                    {(role === 'Admin' && !isAuth) ? null
                     : <>
                     <Route exact path="/dashboard" component={Dashboard}/>
                     <Route exact path="/add-fundraiser" component={AddFundraiser}/>
@@ -51,8 +51,26 @@ function Routes() {
                     <Route exact path="/add-city" component={AddCity}/>
                     <Route exact path="/add-category" component={AddCategory}/>
                     <Route exact path="/users" component={Users}/>
-
                     </>}
+
+                    {/* {() => {
+                         if(role === 'Admin' && isAuth === true) {
+                              <>
+                              <Route exact path="/dashboard" component={Dashboard}/>
+                              <Route exact path="/add-fundraiser" component={AddFundraiser}/>
+                              <Route exact path="/review/:id" component={DetailsInfo}/>
+                              <Route exact path="/payments" component={Payment}/>
+                              <Route exact path="/add-city" component={AddCity}/>
+                              <Route exact path="/add-category" component={AddCategory}/>
+                              <Route exact path="/users" component={Users}/>
+                              </>
+                         } else if (role === 'User' && isAuth === true) {
+                              <>
+                              <Route exact path="/dashboard" component={Dashboard}/>
+                              <Route exact path="/add-fundraiser" component={AddFundraiser}/>
+                              </>
+                         }
+                    }} */}
 
                
                     <Route exact path="/404" component={NotFound}/>

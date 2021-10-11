@@ -132,16 +132,16 @@ export default function Single() {
                 {/* End Donors */}
 
                 {/* Amount details */}
-                <Box display="flex" alignItems="center" style={{marginTop: 25, marginBottom: 20, borderBottom: '1 solid #c8c8c8'}}>
-                  <Box width="33%">
+                <Box className={classes.amountDetails}>
+                  <Box width="33%" className="m1">
                     <Typography component="h1" variant="h6">{PriceFormat(fundraiser.amount)}</Typography>
                     Total amount
                   </Box>
-                  <Box width="33%">
+                  <Box width="33%" className="m1">
                     <Typography component="h1" variant="h6">{PriceFormat(fundraiser.paid)}</Typography>
                     Total raised
                   </Box>
-                  <Box width="33%">
+                  <Box width="33%" className="m1">
                     <Typography component="h1" variant="h6">{PriceFormat(totalRest)}</Typography>
                     Total rest
                   </Box>
@@ -175,13 +175,6 @@ export default function Single() {
                     variant="outlined"
                     icon={<DateIcon />}
                     label={DateFormat(fundraiser.publishDate)}
-                    color="primary"
-                  />
-                  <Chip
-                    size='small'
-                    variant="outlined"
-                    icon={<CategoryIcon />}
-                    label={'School'}
                     color="primary"
                   />
                 </Box>
@@ -226,4 +219,11 @@ const useStyles = makeStyles((theme) => ({
   fixedHeight: {
     height: 'auto',
   },
+  amountDetails : {
+    display: "flex",
+    alignItems:"center",
+    marginTop: 25, 
+    marginBottom: 20, 
+    borderBottom: '1 solid #c8c8c8',
+  }
 }));

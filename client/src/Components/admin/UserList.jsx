@@ -29,6 +29,7 @@ export default function UserList() {
     .catch((error) => alert(error))
   }, [])
 
+  let x = 1
   return (
     <>
     <Title>Users list</Title>
@@ -36,17 +37,19 @@ export default function UserList() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>USERNAME</TableCell>
+            <TableCell>ID</TableCell>
+            <TableCell>FIRST NAME</TableCell>
+            <TableCell>LAST NAME</TableCell>
             <TableCell>EMAIL</TableCell>
-            <TableCell>FUNDRAISER COUNT</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
           {users.map((item, key) => (
             <TableRow key={key}>
-              <TableCell>{item.first_name + ' ' + item.last_name}</TableCell>
+              <TableCell>{x++}</TableCell>
+              <TableCell>{item.first_name}</TableCell>
+              <TableCell>{item.last_name}</TableCell>
               <TableCell>{item.email}</TableCell>
-              <TableCell>0</TableCell>
             </TableRow>
           ))}
         </TableBody>
