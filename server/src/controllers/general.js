@@ -3,8 +3,6 @@ const Payment = require('../models/payment')
 const jwt = require('jsonwebtoken')
 const STRIPE_SECRECT_KEY = process.env.STRIPE_SECRECT_KEY
 const stripe = require('stripe')(STRIPE_SECRECT_KEY);
-// const uuid = require('uuid/v4');
-
 
 /*
      Payment
@@ -12,17 +10,6 @@ const stripe = require('stripe')(STRIPE_SECRECT_KEY);
 exports.payment = async (req, res) => {
 
      const { price, token, name, fundraiserId } = req.body
-
-     // Get current user
-     // let user_id
-     // const userToken = req.cookies.user
-     // if (userToken) {
-     //      jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
-     //           if (err) throw err
-     //           user_id = decodedToken.id
-     //      })
-     // }
-
 
      stripe.charges.create({
           amount: price * 100,
@@ -70,6 +57,76 @@ exports.payment = async (req, res) => {
 }
 
 
+
+/*
+     Create Fundraiser
+*/
+exports.createFundraiser = (req, res) => {
+
+     let { image, city, category, amount, title, description } = req.body
+     console.log(req.body)
+     
+     if (image == '' || city == '' || category == '' || amount == '' || title == '' || description == '') {
+          return res.status(203).json({msg: 'bruh'})
+     }
+
+     if (req.file) {
+          image = req.file.originalname
+     }
+
+
+     // Get user role & id
+     let role;
+     let user_id;
+     const token = req.cookies.admin || req.cookies.user
+     if (token) {
+          jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
+               if (err) throw err
+               role = decodedToken.role
+               user_id = decodedToken.id
+          })
+     }
+
+
+     // 
+     let content;
+     if (role === 'admin') {
+          // Create new Fundraiser if role is admin
+          content = new Fundraiser({
+               user_id: user_id,
+               city_id: city,
+               category_id: category,
+               amount: amount,
+               image: image,
+               title: title,
+               description: description,
+               isAccepted: true
+          });
+     } 
+     else {
+          // Create new Fundraiser if role is user
+          content = new Fundraiser({
+               user_id: user_id,
+               city_id: city,
+               category_id: category,
+               amount: amount,
+               image: image,
+               title: title,
+               description: description,
+          });
+     }
+
+
+     content.save()
+     .then(() => {
+          return res.status(200).json({ message: "Fundraiser Added"})
+     })
+     .catch(err => console.log(err))
+
+}
+
+
+
 /*
      Get Fundraiser
 */
@@ -81,6 +138,7 @@ exports.getFundraiserTrue = (req, res) => {
      .then(data => {
           return res.json(data)
      })
+     .catch(err => { console.log(err) })
 
 }
 
@@ -98,11 +156,6 @@ exports.getFundraiserItem = (req, res) => {
           return res.json(data)
      })
      .catch(err => { console.log(err) })
-     
-     // .exec(function(err, data){
-     //      if(err) throw err
-     //      return res.status(200).json(data)
-     // })
 
 }
 
@@ -111,15 +164,22 @@ exports.getFundraiserItem = (req, res) => {
      Update Fundraiser
 */
 exports.updateFundraiser = (req, res) => {
-     const { title, description } = req.body
+     let { image, title, description } = req.body
      const { id } = req.params
 
+     if (req.file) {
+          image = req.file.originalname
+     }
+
      const update = {
+          image: image,
           title: title,
           description: description
      }
+
      Fundraiser.findByIdAndUpdate(id, update)
      .then(() => {
           return res.json({msg: 'Data updated success'})
      })
+     .catch(err => { console.log(err) })
 }

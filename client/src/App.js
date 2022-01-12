@@ -1,25 +1,12 @@
 import Routers from "./Routes/Routes"
 import { BrowserRouter as Router} from 'react-router-dom'
-import { createTheme, ThemeProvider } from '@material-ui/core'
 import { UserProvider } from "./Context/UserContext"
 import { Helmet } from "react-helmet"
 import favicon from "./Assets/images/favicon.png"
+import CustomTheme from "./Styles/CustomTheme"
+import { SnackbarProvider } from 'notistack';
+// -------------------------------------------------------------
 
-
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#549e39'
-    },
-    secondary: {
-      main: '#ffffff'
-    },
-    typography: {
-      fontFamily: 'Lato',
-      // fontSize: 20
-    }
-  }
-})
 
 function App() {
   return (
@@ -27,13 +14,15 @@ function App() {
     <Helmet>
       <link rel="icon" href={favicon} />
     </Helmet>
-    <ThemeProvider theme={theme}>
+    <CustomTheme>
       <UserProvider>
-        <Router>
-          <Routers />
-        </Router>
+        <SnackbarProvider maxSnack={3}>
+          <Router>
+            <Routers />
+          </Router>
+        </SnackbarProvider>
       </UserProvider>
-    </ThemeProvider>
+    </CustomTheme>
     
     </>
   );

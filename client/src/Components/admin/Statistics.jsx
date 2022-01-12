@@ -4,6 +4,8 @@ import { makeStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import Title from '../dashboard/Title';
 import DateFormat from '../../Utils/DateFormat';
+// --------------------------------------------------------------
+
 
 const useStyles = makeStyles({
   depositContext: {
@@ -23,9 +25,9 @@ export default function Deposits({title, number, link}) {
         on {DateFormat(new Date())}
       </Typography>
       <div>
-        <Link color="primary" href={link}>
+        {/* <Link color="primary" href={link}>
           View Details
-        </Link>
+        </Link> */}
       </div>
     </React.Fragment>
   );

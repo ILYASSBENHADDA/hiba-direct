@@ -1,31 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { Grid, TextField, Button, Snackbar, FormControl, InputLabel, Select, MenuItem } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
-import Title from '../dashboard/Title';
+import { Grid, TextField, Button, FormControl, InputLabel, Select, MenuItem, CardMedia, FormLabel } from '@material-ui/core';
 import useStyles from '../../Styles/ThemeStyle';
 import api from '../../Api/api';
-import Backdrop from '@material-ui/core/Backdrop';
-import CircularProgress from '@material-ui/core/CircularProgress';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { useSnackbar } from 'notistack';
+const UploadPlacehoder = '/uploads/placeholder-image.png'
+// ----------------------------------------------------------------------
 
-function Alert(props) {
-     return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 export default function AddFundraisingFrom() {
      const classes = useStyles();
+     const { enqueueSnackbar } = useSnackbar();
 
-     const [open, setOpen] = useState(false);
-     const [openBackDrop, setOpenBackDrop] = useState(false);
-     const [msg, setMsg] = useState('');
-     const [accepted, setAccepted] = useState(false);
+     const [thumbnial, setThumbnial] = useState(UploadPlacehoder)
      const [city, setCity] = useState([]);
      const [category, setCategory] = useState([]);
-     const [fundraiser, setFundraiser] = useState({
+     const [content, setContent] = useState({
           city: '',
           category: '',
           amount: '',
           title: '',
-          description: '', 
+          description: '',
           image: ''
      })
 
@@ -48,69 +43,101 @@ export default function AddFundraisingFrom() {
      }, [])
 
 
-     // Handle Change
-     const handleChange = (name) => (e) => {
-          const value = name === 'image' ? e.target.files[0] : e.target.value;
-          setFundraiser({ ...fundraiser, [name]: value });
-     };
-
-
      // On Submit
-     const onSubmit = (e) => {
-          e.preventDefault()
+     const onSubmit = (event) => {
+          event.preventDefault();
 
           const data = new FormData();
-          data.append("city", fundraiser.city);
-          data.append("category", fundraiser.category);
-          data.append("amount", fundraiser.amount);
-          data.append("title", fundraiser.title);
-          data.append("description", fundraiser.description);
-          data.append("image", fundraiser.image);
+          data.append("city", content.city);
+          data.append("category", content.category);
+          data.append("amount", content.amount);
+          data.append("title", content.title);
+          data.append("description", content.description);
+          data.append("image", content.image);
 
           api.post('create-fundraiser', data)
-          .then(resp => {
-               if(!resp.data.accepted) {
-                    handleCloseBackDrop()
-                    setMsg(resp.data.msg)
-                    setOpen(true)
+          .then(response => {
+               console.log(response)
+               if (response.status === 200) {
+                    EmptyForm();
+                    enqueueSnackbar('New Fundraiser Added', { variant: 'success' });
                }
-               if(resp.data.accepted) {
-                    handleCloseBackDrop()
-                    setAccepted(true)
-                    setMsg(resp.data.msg)
-                    setOpen(true)
-                    setTimeout(() => {
-                         window.location.href = '/dashboard'
-                    }, 1500);
+               else {
+                    enqueueSnackbar('Please fill out all fields', { variant: 'warning' });
                }
+               
           })
-          .catch((error) => alert(error))
+          .catch((error) => {
+               console.log(error)
+               enqueueSnackbar('Something wrong, Try again!', { variant: 'error' })
+          })
      }
 
-     // Alert 
-     const handleClose = (event, reason) => {
-          if (reason === 'clickaway') {
-               return;
+     // Empty Form
+     const EmptyForm = () => {
+          setContent({
+               city: '',
+               category: '',
+               amount: '',
+               title: '',
+               description: '',
+               image: ''
+          });
+          setThumbnial(UploadPlacehoder);
+     }
+
+
+
+     // On Change
+     const handleChange = (name) => (e) => {
+          const value = name === 'image' ? e.target.files[0] : e.target.value;
+          setContent({ ...content, [name]: value });
+
+          // Image preview upload
+          if (name === 'image') {
+               const reader = new FileReader();
+               const img = e.target.files[0]
+               reader.onload = () =>{
+                    if(reader.readyState === 2){
+                         setThumbnial(reader.result)
+                    }
+               }
+               img ? reader.readAsDataURL(img) : setThumbnial(UploadPlacehoder)
           }
-          setOpen(false);
      };
 
-     // Backdrop
-     const handleCloseBackDrop = () => {
-          setOpenBackDrop(false);
-     };
-
-     const handleToggleBackDrop = () => {
-          setOpenBackDrop(!open);
-     };
 
 
      return (
      <>
-          <Title>Recent Deposits</Title>
-          <form onSubmit={onSubmit}>
+          <form style={{marginTop: 5}} onSubmit={onSubmit} encType="multipart/form-data">
           <Grid container spacing={2}>
-               
+
+               {/* IMAGE */}
+               <Grid item xs={12}>
+               <FormLabel> Upload thumbnail </FormLabel>
+                    <label htmlFor="input">
+                         <CardMedia
+                              style={{
+                                   // height: 0,
+                                   paddingTop: '30%',
+                                   borderRadius: 10,
+                                   width: 500,
+                                   cursor: 'pointer',
+                                   position: 'relative',
+                                   marginTop: 8
+                              }}
+                              image={thumbnial}
+                         >
+                              <CancelIcon 
+                                   style={{color: "#549e39", position: 'absolute', top: 10, right: 10, fontSize: 30, display: thumbnial === UploadPlacehoder ? 'none' : 'block'}} 
+                                   onClick={()=> setThumbnial(UploadPlacehoder)} 
+                              />
+                         </CardMedia>
+                    </label>
+                    <input type="file" hidden accept="image/*" name="image" id="input" onChange={handleChange("image")} />
+               </Grid>
+
                {/* City */}
                <Grid item xs={12}>
                     <FormControl variant="outlined" style={{width: '100%'}}>
@@ -118,7 +145,7 @@ export default function AddFundraisingFrom() {
                          <Select
                               labelId="city-label"
                               fullWidth
-                              value={fundraiser.city}
+                              value={content.city}
                               onChange={handleChange('city')}
                               label='City'
                               name='city'
@@ -139,7 +166,7 @@ export default function AddFundraisingFrom() {
                          <Select
                               labelId="category-label"
                               fullWidth
-                              value={fundraiser.category}
+                              value={content.category}
                               onChange={handleChange('category')}
                               label='Category'
                               name='category'
@@ -161,19 +188,11 @@ export default function AddFundraisingFrom() {
                          fullWidth
                          name="amount"
                          label="Amunt ($)"
+                         type='number'
+                         value={content.amount}
                     />
                </Grid>
 
-               {/* Image */}
-               <Grid item xs={12}>
-                    <TextField
-                         variant="outlined"
-                         fullWidth
-                         type='file'
-                         name='image'
-                         onChange={handleChange('image')}
-                    />
-               </Grid>
                
                {/* Title */}
                <Grid item xs={12}>
@@ -183,6 +202,7 @@ export default function AddFundraisingFrom() {
                          fullWidth
                          name="title"
                          label="Title"
+                         value={content.title}
                     />
                </Grid>
                
@@ -196,6 +216,7 @@ export default function AddFundraisingFrom() {
                          label="Description"
                          multiline
                          rows={5}
+                         value={content.description}
                     />
                </Grid>
 
@@ -208,22 +229,10 @@ export default function AddFundraisingFrom() {
                     color="primary"
                     size="large"
                     className={classes.submit}
-                    onClick={handleToggleBackDrop}
                >
                Create Fundraiser
                </Button>
 
-               {/************************ A L E R T ******************************/}
-               <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity={accepted ? "success" : "warning"}>
-                         {msg}
-                    </Alert>
-               </Snackbar>
-               {/********************* B A C K D R O P ***************************/}
-               <Backdrop className={classes.backdrop} open={openBackDrop}>
-                         <CircularProgress color="inherit" />
-                    </Backdrop>
-               {/*****************************************************************/}
                </Grid>
 
           </Grid>

@@ -1,6 +1,38 @@
 import { alpha, makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
+     /* Header styles */
+     mainFeaturedPost: {
+          position: 'relative',
+          backgroundColor: theme.palette.grey[800],
+          color: theme.palette.common.white,
+          marginBottom: theme.spacing(4),
+          backgroundImage: 'url(https://source.unsplash.com/random)',
+          backgroundSize: 'cover',
+          backgroundRepeat: 'no-repeat',
+          backgroundPosition: 'center',
+     },
+     overlay: {
+          position: 'absolute',
+          top: 0,
+          bottom: 0,
+          right: 0,
+          left: 0,
+          backgroundColor: 'rgba(0,0,0,.3)',
+     },
+     mainFeaturedPostContent: {
+          position: 'relative',
+          padding: theme.spacing(3),
+          [theme.breakpoints.up('md')]: {
+               padding: theme.spacing(6),
+               paddingRight: 0,
+          },
+     },
+     heroButtons: {
+          marginTop: theme.spacing(4),
+     },
+     /* End Header styles */
+
      /* Start Signin & Signup forms */
      paper: {
           marginTop: theme.spacing(8),
@@ -86,11 +118,46 @@ const useStyles = makeStyles((theme) => ({
      },
      /* End Navbar */
 
+     /* Link */
+     linkPrimary: {
+          color: '#fff',
+          textDecoration: 'none',
+     },
+     linkSecondary: {
+          color: '#000',
+          textDecoration: 'none',
+     },
+     /* End Link */
+
+     /* Dashboard Styles */
+     root: {
+          display: 'flex',
+     },
+     appBarSpacer: theme.mixins.toolbar,
+     content: {
+          flexGrow: 1,
+          height: '100vh',
+          overflow: 'auto',
+     },
+     container: {
+          paddingTop: theme.spacing(4),
+          paddingBottom: theme.spacing(4),
+     },
+     paperDash: {
+          padding: theme.spacing(2),
+          display: 'flex',
+          overflow: 'auto',
+          flexDirection: 'column',
+     },
+     fixedHeight: {
+          height: 240,
+     },
+     /* End Dashboard Styles */
+
 
      depositContext: {
           flex: 1,
      },
-
      margin: {
           margin: theme.spacing(1),
      },

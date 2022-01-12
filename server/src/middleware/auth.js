@@ -27,13 +27,13 @@ exports.checkUser = (req, res, next) => {
         jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
             if (err) {
                 decodedToken.role === 'admin'
-                ? res.status(200).clearCookie('admin').json({ role: 'Admin'})
-                : res.status(200).clearCookie('user').json({ role: 'User'})
+                ? res.status(200).clearCookie('admin').json({ role: 'admin'})
+                : res.status(200).clearCookie('user').json({ role: 'user'})
             }
             else {
                 decodedToken.role === 'admin'
-                    ? res.status(200).json({ isAuth: true, role: 'Admin' })
-                    : res.status(200).json({ isAuth: true, role: 'User' })
+                    ? res.status(200).json({ isAuth: true, role: 'admin' })
+                    : res.status(200).json({ isAuth: true, role: 'user' })
             }
         })
     }

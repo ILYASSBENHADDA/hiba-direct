@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@material-ui/lab": "^4.0.0-alpha.60",
     "bcrypt": "^5.0.1",
     "cloudinary": "^1.26.3",
     "cookie-parser": "^1.4.5",
@@ -26,6 +25,7 @@
   },
   "devDependencies": {
     "jest": "^27.0.5",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "supertest": "^6.1.6"
   }
 }

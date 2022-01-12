@@ -2,32 +2,46 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 
 
-const AuthRouter = ({component:Component, isAuth, ...rest}) => {
+const AdminRouter = ({component:Component, isAuth, role, ...rest}) => {
      return (
           <Route
                {...rest}
-               render={() => !isAuth ? <Component/> : <Redirect to='/' />}
+               render={() => (
+                    (isAuth)
+                    ? <Component/> : <Redirect to="/" />  
+               )}
           />
      )
 }
 
 
-const AdminRouter = ({component:Component, isAuth, role, ...rest}) => {
+const AuthRouter = ({component:Component, isAuth, role, ...rest}) => {
      return (
           <Route
                {...rest}
-               render={() => {
-                    if(isAuth && role === "Admin") {
+               render={() => 
+                    
+               {
+                    if(!isAuth) {
                          return <Component/>
-                    } 
-                    else {
-                         return <Redirect to='/sign-in'/>
+                    } else {
+                         return (
+                              <Redirect to='/' />
+                         )
                     }
-                    // (isAuth && role === 'Admin')  
-                    // ? <Component/> : <Redirect to="/sign-in" /> 
+               }
+                    
+                    // (
+                    // !isAuth ? <Component/> 
+                    //         : (role === "admin" 
+                    //           ? <Redirect to="/dashboard" />  
+                    //             : ( role === "user"
+                    //              ? <Redirect to="/technician" /> 
+                    //              : <Redirect to="/profileUser" />)
+                    // ))
+               }
 
-                    // return ( isAuth ? <Component/> : <Redirect to='/login' /> )
-               }}
+               // render={() => !isAuth ? <Component/> : <Redirect to='/' />}
           />
      )
 }
@@ -38,7 +52,7 @@ const UserRouter = ({ component:Component, isAuth, role, ...rest }) => {
           <Route
                {...rest}
                render={() => {
-                    if(isAuth && role === 'User') {
+                    if(isAuth && role === 'user') {
                          return <Component/>
                     } else {
                          return (

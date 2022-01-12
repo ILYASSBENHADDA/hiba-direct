@@ -5,7 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import SearchIcon from '@material-ui/icons/Search';
-import MoreIcon from '@material-ui/icons/MoreVert';
+import MenuIcon from '@material-ui/icons/Menu';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import useStyles from '../Styles/ThemeStyle';
@@ -16,6 +16,9 @@ import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import DashboardIcon from '@material-ui/icons/Dashboard';
 import logo from '../Assets/images/logo.png';
+import { Link } from 'react-router-dom';
+// -----------------------------------------------------------------
+
 
 export default function Navbar() {
      const classes = useStyles();
@@ -68,12 +71,12 @@ export default function Navbar() {
           open={isMenuOpen}
           onClose={handleMenuClose}
      >
-          <MenuItem onClick={() => window.location.href = "/dashboard"}>Dashboard</MenuItem>
-          <MenuItem onClick={() => window.location.href = "/add-fundraiser"}>Start a new fundraiser</MenuItem>
-          {role === 'Admin' ? 
-          <MenuItem onClick={() => window.location.href = "/payments"}>Payments</MenuItem>
+          <MenuItem> <Link to="/dashboard" className={classes.linkSecondary}> Dashboard </Link> </MenuItem>
+          <MenuItem> <Link to="/add-fundraiser" className={classes.linkSecondary}> Start a new fundraiser </Link> </MenuItem>
+          {role === 'admin' ? 
+          <MenuItem> <Link to="/payments" className={classes.linkSecondary}> Payments </Link> </MenuItem>
           : null}
-          <MenuItem onClick={() => window.location.href = "/logout"}>Sign out</MenuItem>
+          <MenuItem> <Link to="/logout" className={classes.linkSecondary}> Logout </Link> </MenuItem>
      </Menu>
      );
 
@@ -104,23 +107,23 @@ export default function Navbar() {
           </MenuItem>
 
           {/* item mobile */}
-          <MenuItem onClick={() => window.location.href = "/logout"}>
-          <IconButton color="inherit">
-               <ExitToAppIcon />
-          </IconButton>
-          <p>Sign out</p>
+          <MenuItem>
+               <IconButton color="inherit">
+                    <ExitToAppIcon />
+               </IconButton>
+               <Link to="/logout" className={classes.linkSecondary}> Logout </Link>
           </MenuItem>
 
           </> : <>
 
           {/* item mobile */}
-          <MenuItem onClick={() => window.location.href = "/sign-up"}>
-          <p>Sign up</p>
+          <MenuItem>
+               <Link to="/sign-up" className={classes.linkSecondary}> Sign up </Link>
           </MenuItem>
 
           {/* item mobile */}
-          <MenuItem onClick={() => window.location.href = "/sign-in"}>
-          <p>Sign in</p>
+          <MenuItem>
+               <Link to="/sign-in" className={classes.linkSecondary}> Sign in </Link>
           </MenuItem>
           </>}
      </Menu>
@@ -183,19 +186,15 @@ export default function Navbar() {
                     <Button 
                     color="inherit"
                     startIcon={<ExitToAppIcon />}
-                    onClick={() => window.location.href = "/logout"}
                     >
-                         Sign out
+                         <Link to="/logout" className={classes.linkPrimary}> Logout</Link>
                     </Button>
 
                     </> : <>
 
                     {/* item web */}
-                    <Button 
-                     color="inherit"
-                     onClick={() => window.location.href = "/sign-up"}
-                    >
-                         Sign up
+                    <Button color="inherit">
+                         <Link to="/sign-up" className={classes.linkPrimary}> Sign up </Link>
                     </Button>
 
                     {/* item web */}
@@ -218,7 +217,7 @@ export default function Navbar() {
                          onClick={handleMobileMenuOpen}
                          color="inherit"
                     >
-                         <MoreIcon />
+                         <MenuIcon />
                     </IconButton>
                </div>
           </Toolbar>

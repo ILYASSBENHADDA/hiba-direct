@@ -10,12 +10,12 @@ let fundraiserSchema = new Schema({
      paid: { type: Number, default: 0 },
      donors: { type: Number, default: 0 },
      image: { type: String, default: ''},
-     cloudinary_img_id: { type: String, default: ''},
      title: { type: String, default: '' },
      description: { type: String, default: '' },
      isAccepted: { type: Boolean, default: null },
      isFreezed: { type: Boolean, default: false },
      publishDate: { type: Date, default: Date.now },
+     // cloudinary_img_id: { type: String, default: ''},
 },
 { 
      versionKey: false

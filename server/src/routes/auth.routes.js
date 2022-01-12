@@ -11,5 +11,10 @@ router.post('/sign-in', signIn)
 // Sign Out User
 router.get('/logout', logout)
 
+// Test
+router.post('/test', (req, res) => {
+     return res.status(200)
+})
+
 
 module.exports = router

@@ -68,6 +68,7 @@ exports.addCity = (req, res) => {
 exports.getCity = (req, res) => {
      
      City.find()
+     .sort({"_id": -1})
      .then(data => {
           return res.json(data)
      })
@@ -97,6 +98,7 @@ exports.addCategory = (req, res) => {
 exports.getCategory = (req, res) => {
      
      Category.find()
+     .sort({"_id": -1})
      .then(data => {
           return res.json(data)
      })
@@ -158,15 +160,6 @@ exports.freezeFundraiser = (req, res) => {
 */
 exports.deleteFundraiser = async (req, res) => {
      const { id } = req.body
-
-     try {
-          const fund = await Fundraiser.findById(id) 
-
-          await cloudinary.uploader.destroy(fund.cloudinary_img_id)
-     } catch (error) {
-          console.log(error)
-     }
-     
 
      Fundraiser.findByIdAndRemove(id)
      .then(() => {

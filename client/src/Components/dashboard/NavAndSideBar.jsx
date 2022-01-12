@@ -78,7 +78,7 @@ const NavAndSideBar = () => {
           <List>
                <MainListItems/>
           </List>
-          {role !== 'Admin' ? null : 
+          {role !== 'admin' ? null : 
           <>
           <Divider />
           <List>{secondaryListItems}</List>

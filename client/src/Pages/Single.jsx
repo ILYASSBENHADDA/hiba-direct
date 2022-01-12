@@ -24,6 +24,9 @@ import DateFormat from '../Utils/DateFormat';
 import pricePerCent from '../Utils/pricePerCent';
 import PriceFormat from '../Utils/PriceFormat';
 import {Helmet} from 'react-helmet';
+// ------------------------------------------------------------------
+
+
 
 export default function Single() {
   const classes = useStyles();
@@ -36,6 +39,7 @@ export default function Single() {
     try {
       const respence = await api.get(`get-fundraiser/${id}`)
       setFundraiser(respence.data)
+      console.log(respence.data)
     } catch (error) {
       alert(error)
     }
@@ -45,6 +49,9 @@ export default function Single() {
   useEffect(() => {
     getData()
   }, [])
+
+  // ---------------
+  
 
   // Total rest
   const totalRest = fundraiser.amount - fundraiser.paid
@@ -84,7 +91,7 @@ export default function Single() {
                   borderRadius: 5,
                 }}
                 // className={classes.media}
-                image={fundraiser.image}
+                image={`/uploads/${fundraiser.image}`}
                 title={fundraiser.title}
               />
             </Grid>
@@ -164,7 +171,7 @@ export default function Single() {
                   <Chip
                     variant="outlined"
                     icon={<AccountCircleIcon />}
-                    label={'Ilyass Benhadda'}
+                    label={fundraiser?.user_id?.first_name + " " + fundraiser?.user_id?.last_name}
                     color="primary"
                   />
                 </Box>

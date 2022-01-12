@@ -9,28 +9,24 @@ import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Title from '../dashboard/Title';
 import api from '../../Api/api';
-import Chip from '@material-ui/core/Chip';
 import DateFormat from '../../Utils/DateFormat';
-import { Typography } from '@material-ui/core';
+import { Chip } from '@material-ui/core';
+// --------------------------------------------------------------
 
 
-export default function PostList() {
+export default function FundraisersList() {
 
-  const [fundraiser, setFundraiser] = useState([])
+  const [payment, setPayment] = useState([])
 
   useEffect(() => {
-    api.get('current-post')
-    .then(resp => {
-      setFundraiser(resp.data) 
-      console.log(resp.data)
-    })
+    api.get('get-fundraiser')
+    .then(resp => setPayment(resp.data))
     .catch((error) => alert(error))
-  }, [fundraiser])
-
+  }, [])
 
   return (
     <>
-    <Title>Recent fundraisers</Title>
+    <Title>Fundraisers list</Title>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>
@@ -43,13 +39,8 @@ export default function PostList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {!fundraiser[0] ? 
-          <Typography align="center" style={{margin: 10, fontWeight: 600}}>
-            No fundraising available
-          </Typography>
-          : 
-          fundraiser.map((item) => (
-            <TableRow key={item.title}>
+          {payment.map((item, key) => (
+            <TableRow key={key}>
               <TableCell component="th" scope="row">{DateFormat(item.publishDate)}</TableCell>
               <TableCell><Link href={`/review/${item._id}`}>{item.title}</Link></TableCell>
               <TableCell>{item.city_id.name}</TableCell>

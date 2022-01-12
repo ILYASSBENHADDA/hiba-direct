@@ -5,20 +5,20 @@ import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
-import PaymentList from '../../Components/admin/PaymentList';
+import FundraisersList from '../../Components/admin/FundraisersList';
 import Copyright from '../../Components/Copyright';
-import UserList from '../../Components/admin/UserList';
 import { Helmet } from 'react-helmet';
+// -------------------------------------------------------------------
 
 
-export default function Users() {
+export default function Fundraisers() {
   const classes = useStyles();
 
   return (
     <>
     {/* REACT HELMET */}
     <Helmet>
-      <title>{'Users - Hiba Direct'}</title>
+      <title>{'Fundraisers - Hiba Direct'}</title>
     </Helmet>
 
     <div className={classes.root}>
@@ -31,10 +31,10 @@ export default function Users() {
         <Container maxWidth="lg" className={classes.container}>
           
           <Grid container spacing={3}>            
-            {/* Recent Payment */}
+            {/* Recent Fundraisers */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>
-                <UserList />
+                <FundraisersList />
               </Paper>
             </Grid>
           </Grid>
@@ -49,7 +49,7 @@ export default function Users() {
       {/* END CONTENT */}
 
     </div>
-    </>
+  </>
   );
 }
 

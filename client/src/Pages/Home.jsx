@@ -10,20 +10,18 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import LinearProgress from '@material-ui/core/LinearProgress';
 import Location from '@material-ui/icons/LocationOn';
-import PostTime from '@material-ui/icons/WatchLater';
 import Link from '@material-ui/core/Link';
 import Navbar from '../Components/Navbar';
 import api from '../Api/api';
 import FooterContainer from '../Components/footer';
 import Copyright from '../Components/Copyright';
-import DateFormat from '../Utils/DateFormat';
 import PriceFormat from '../Utils/PriceFormat';
 import coverImg from '../Assets/images/cover.png';
 import pricePerCent from '../Utils/pricePerCent';
 import Header from '../Components/Header';
 import { Helmet } from 'react-helmet';
 import CategoryIcon from '@material-ui/icons/LocalOffer';
-
+// ------------------------------------------------------------
 
 
 export default function Home() {
@@ -35,7 +33,7 @@ export default function Home() {
     api.get('get-fundraiser')
     .then(resp => setFundraiser(resp.data))
     .catch((error) => alert(error))
-  }, [])
+  }, [fundraiser])
 
   return (
     <>
@@ -65,12 +63,12 @@ export default function Home() {
                 <Card className={classes.card}>
                   <CardMedia
                     className={classes.cardMedia}
-                    image={item.image}
+                    image={`/uploads/${item.image}`} // item.image
                     title={item.title}
                   />
                   <CardContent className={classes.cardContent}>
                     {/* Title */}
-                    <Typography gutterBottom variant="h6" component="h2">
+                    <Typography gutterBottom variant="h6" component="h2" noWrap>
                       {item.title}
                     </Typography>
                     {/* End Title */}

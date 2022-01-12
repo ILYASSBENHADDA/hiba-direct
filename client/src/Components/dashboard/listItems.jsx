@@ -9,42 +9,62 @@ import BarChartIcon from '@material-ui/icons/BarChart';
 import CityIcon from '@material-ui/icons/LocationCity';
 import CategoryIcon from '@material-ui/icons/LocalOffer';
 import PostAddIcon from '@material-ui/icons/PostAdd';
+import ListIcon from '@material-ui/icons/FormatListBulleted';
 import { UserContext } from "../../Context/UserContext"
-
+import { Link } from 'react-router-dom';
+import useStyles from '../../Styles/ThemeStyle';
+// -----------------------------------------------------------
 
 export const MainListItems = () => {
-
+  const classes = useStyles();
   const { infos:{ role }} = useContext(UserContext)
 
   return (
   <div>
-    <ListItem button onClick={() => window.location.href = "/dashboard"}>
+    <ListItem button>
       <ListItemIcon>
         <DashboardIcon />
       </ListItemIcon>
-      <ListItemText primary="Dashboard" />
+      <Link to="/dashboard" className={classes.linkSecondary}> 
+        <ListItemText primary="Dashboard" /> 
+      </Link>
     </ListItem>
 
-    <ListItem button onClick={() => window.location.href = "/add-fundraiser"}>
+    <ListItem button>
       <ListItemIcon>
         <PostAddIcon />
       </ListItemIcon>
-      <ListItemText primary="Fundraisers" />
+      <Link to="/add-fundraiser" className={classes.linkSecondary}> 
+        <ListItemText primary="Add Fundraiser" /> 
+      </Link>
     </ListItem>
-    {role !== 'Admin' ? null :
+    {role !== 'admin' ? null :
     <>
-    <ListItem button onClick={() => window.location.href = "/users"}>
+    <ListItem button>
+      <ListItemIcon>
+        <ListIcon />
+      </ListItemIcon>
+      <Link to="/fundraisers" className={classes.linkSecondary}> 
+        <ListItemText primary="Fundraisers" /> 
+      </Link>
+    </ListItem>
+
+    <ListItem button>
       <ListItemIcon>
         <PeopleIcon />
       </ListItemIcon>
-      <ListItemText primary="Users" />
+      <Link to="/users" className={classes.linkSecondary}> 
+        <ListItemText primary="Users" /> 
+      </Link>
     </ListItem>
 
-    <ListItem button onClick={() => window.location.href = "/payments"}>
+    <ListItem button>
       <ListItemIcon>
         <BarChartIcon />
       </ListItemIcon>
-      <ListItemText primary="Payments" />
+      <Link to="/payments" className={classes.linkSecondary}> 
+        <ListItemText primary="Payments" /> 
+      </Link>
     </ListItem>
     </>}
   </div>
@@ -54,18 +74,22 @@ export const MainListItems = () => {
 export const secondaryListItems = (
   <div>
     <ListSubheader inset>Configirations</ListSubheader>
-    <ListItem button onClick={() => window.location.href = "/add-category"}>
+    <ListItem button>
       <ListItemIcon>
         <CategoryIcon />
       </ListItemIcon>
-      <ListItemText primary="Add category" />
+      <Link to="/add-category" style={{textDecoration: 'none', color: '#000'}}> 
+        <ListItemText primary="Add category" /> 
+      </Link>
     </ListItem>
 
-    <ListItem button onClick={() => window.location.href = "/add-city"}>
+    <ListItem button>
       <ListItemIcon>
         <CityIcon />
       </ListItemIcon>
-      <ListItemText primary="Add city" />
+      <Link to="/add-city" style={{textDecoration: 'none', color: '#000'}}> 
+        <ListItemText primary="Add city" /> 
+      </Link>
     </ListItem>
   </div>
 );

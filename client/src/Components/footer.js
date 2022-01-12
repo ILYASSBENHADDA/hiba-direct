@@ -1,31 +1,46 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
+import api from '../Api/api'
 import Footer from './footerComponents/footer'
 import Icon from './footerComponents/icons'
 
 function FooterContainer() {
+    const [posts, setPosts] = useState([])
+    // Loop data
+    const getData = async () => {
+        try {
+            const {data} = await api.get('get-fundraiser')
+            setPosts(data)
+            console.log(data)
+        } 
+        catch (error) {
+        alert(error)
+        }
+    }
+    useEffect(() => {
+        getData()
+    }, [])
+
     return (
         <Footer>
             <Footer.Wrapper>
             <Footer.Row>
                 <Footer.Column>
-                <Footer.Title>About Us</Footer.Title>
-                    <Footer.Link href="#">Story</Footer.Link>
-                    <Footer.Link href="#">Clients</Footer.Link>
-                    <Footer.Link href="#">Testimonials</Footer.Link>
+                <Footer.Title>Resent posts</Footer.Title>
+                    {posts.slice(0, 4).map((item, key) => (
+                        <Footer.Link style={{overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis'}} href={`post/${item._id}`}>{item.title}</Footer.Link>
+                    ))}
                 </Footer.Column>
                 <Footer.Column>
-                <Footer.Title>Services</Footer.Title>
-                    <Footer.Link href="#">Marketing</Footer.Link>
-                    <Footer.Link href="#">Consulting</Footer.Link>
-                    <Footer.Link href="#">Development</Footer.Link>
-                    <Footer.Link href="#">Design</Footer.Link>
+                <Footer.Title>Category</Footer.Title>
+                    {posts.slice(0, 4).map((item, key) => (
+                        <Footer.Link href={`post/${item._id}`}>{item.category_id.name}</Footer.Link>
+                    ))}
                 </Footer.Column>
                 <Footer.Column>
-                <Footer.Title>Contact Us</Footer.Title>
-                    <Footer.Link href="#">United States</Footer.Link>
-                    <Footer.Link href="#">United Kingdom</Footer.Link>
-                    <Footer.Link href="#">Australia</Footer.Link>
-                    <Footer.Link href="#">Support</Footer.Link>
+                <Footer.Title>Locations</Footer.Title>
+                    {posts.slice(0, 4).map((item, key) => (
+                        <Footer.Link href={`post/${item._id}`}>{item.city_id.name}</Footer.Link>
+                    ))}
                 </Footer.Column>
                 <Footer.Column>
                 <Footer.Title>Social</Footer.Title>

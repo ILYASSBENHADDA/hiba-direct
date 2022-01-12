@@ -8,6 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Title from '../dashboard/Title';
 import api from '../../Api/api';
+// --------------------------------------------------------------------
 
 
 export default function CategoryList() {
@@ -18,7 +19,10 @@ export default function CategoryList() {
     api.get('get-category')
     .then(resp => setCategory(resp.data))
     .catch((error) => alert(error))
-  }, [])
+  }, [category])
+
+  // Static count for table
+  let id = 1
 
   return (
     <>
@@ -34,7 +38,7 @@ export default function CategoryList() {
         <TableBody>
           {category.map((item, key) => (
             <TableRow key={key}>
-              <TableCell component="th">{item._id}</TableCell>
+              <TableCell component="th">{id++}</TableCell>
               <TableCell>{item.name}</TableCell>
             </TableRow>
           ))}

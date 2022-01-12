@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
@@ -9,162 +9,147 @@ import Container from '@material-ui/core/Container';
 import useStyles from '../Styles/ThemeStyle';
 import Navbar from '../Components/Navbar';
 import api from '../Api/api';
-import { Formik, Form, Field, ErrorMessage } from 'formik'
-import * as Yup from 'yup'
-import MuiAlert from '@material-ui/lab/Alert';
-import { Snackbar } from '@material-ui/core';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
 import { Helmet } from 'react-helmet';
-
-function Alert(props) {
-     return <MuiAlert elevation={6} variant="filled" {...props} />
-}
+// Context Api 
+import { UserContext } from "../Context/UserContext"
+import { useSnackbar } from 'notistack';
+// ----------------------------------------------------------------------
 
 
 export default function SignUp() {
-const classes = useStyles();
-const [open, setOpen] = useState(false)
-const [msg, setMsg] = useState('')
+     const { setInfos } = useContext(UserContext)
+     const classes = useStyles();
+     const { enqueueSnackbar } = useSnackbar();
 
 
-const initialValues = {
-     first_name: '',
-     last_name: '',
-     email: '',
-     password: '',
-}
-
-// Validation Schema
-const validationSchema = Yup.object().shape({
-     first_name: Yup.string().required("Required"),
-     last_name: Yup.string().required("Required"),
-     email: Yup.string().email('Please enter valid email').required("Required"),
-     password: Yup.string().min(4, 'Password so short').required("Required")
-})
-
-// onSubmit
-const onSubmit = (values, props) => {
-
-     api.post('sign-up', values, { withCredentials: true })
-     .then(resp => {
-          setTimeout(()=> {
-               props.resetForm()
-               props.setSubmitting(false)
-               setMsg(resp.data.message)
-               setOpen(true)
-          }, 1000)
-     })
-     .catch((error) => alert(error))
-}
-
-// Close handle Alert
-const handleClose = (event, reason) => {
-     if (reason === 'clickaway') {
-          return;
+     const initialValues = {
+          first_name: '',
+          last_name: '',
+          email: '',
+          password: '',
      }
-     setOpen(false);
-};
 
-return (
-     <>
-     {/* REACT HELMET */}
-     <Helmet>
-          <title>{'Sign Up - Hiba Direct'}</title>
-     </Helmet>
+     // Validation Schema
+     const validationSchema = Yup.object().shape({
+          first_name: Yup.string().required("Required"),
+          last_name: Yup.string().required("Required"),
+          email: Yup.string().email('Please enter valid email').required("Required"),
+          password: Yup.string().min(4, 'Password so short').required("Required")
+     })
 
-     {/* NAVIGATION BAR */}
-     <Navbar />
-     <Container component="main" maxWidth="xs">
-          <div className={classes.paper}>
-               <Avatar className={classes.avatar}>
-                    <ExitToAppIcon />
-               </Avatar>
-               <Typography component="h1" variant="h5">
-                    Sign up
-               </Typography>
+     // onSubmit
+     const onSubmit = (values, props) => {
 
-               <div className={classes.form}>
-               <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-               {(props) => (
-                    <Form noValidate>
-                         <Grid container spacing={2}>
-                              <Grid item xs={12} sm={6}>
-                                   <Field 
-                                    as={TextField} 
-                                    label='First Name' 
-                                    name="first_name" 
-                                    variant="outlined" 
-                                    fullWidth 
-                                    error={props.errors.first_name && props.touched.first_name}
-                                    required
-                                    helperText={<ErrorMessage name="first_name" />}
-                                   />
+          api.post('sign-up', values, { withCredentials: true })
+          .then(resp => {
+               if(resp) {
+                    setInfos(resp.data)
+               }
+               setTimeout(()=> {
+                    props.resetForm()
+                    props.setSubmitting(false)
+                    enqueueSnackbar('Account created with success, Thank you!', { variant: 'success' });
+               }, 1000)
+          })
+          .catch((error) => alert(error))
+     }
+
+
+     return (
+          <>
+          {/* REACT HELMET */}
+          <Helmet>
+               <title>{'Sign Up - Hiba Direct'}</title>
+          </Helmet>
+
+          {/* NAVIGATION BAR */}
+          <Navbar />
+          <Container component="main" maxWidth="xs">
+               <div className={classes.paper}>
+                    <Avatar className={classes.avatar}>
+                         <ExitToAppIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                         Sign up
+                    </Typography>
+
+                    <div className={classes.form}>
+                    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
+                    {(props) => (
+                         <Form noValidate>
+                              <Grid container spacing={2}>
+                                   <Grid item xs={12} sm={6}>
+                                        <Field 
+                                        as={TextField} 
+                                        label='First Name' 
+                                        name="first_name" 
+                                        variant="outlined" 
+                                        fullWidth 
+                                        error={props.errors.first_name && props.touched.first_name}
+                                        required
+                                        helperText={<ErrorMessage name="first_name" />}
+                                        />
+                                   </Grid>
+                                   <Grid item xs={12} sm={6}>
+                                        <Field 
+                                        as={TextField} 
+                                        label='Last Name' 
+                                        name="last_name"
+                                        variant="outlined" 
+                                        fullWidth 
+                                        error={props.errors.last_name && props.touched.last_name}
+                                        required
+                                        helperText={<ErrorMessage name="last_name" />}
+                                        />
+                                   </Grid>
+                                   <Grid item xs={12}>
+                                        <Field 
+                                        as={TextField} 
+                                        label='Email Address' 
+                                        name="email" 
+                                        variant="outlined" 
+                                        fullWidth 
+                                        error={props.errors.email && props.touched.email}
+                                        required
+                                        helperText={<ErrorMessage name="email" />}
+                                        />
+                                   </Grid>
+                                   <Grid item xs={12}>
+                                        <Field 
+                                        as={TextField} 
+                                        label='Password' 
+                                        name="password" 
+                                        type="password"
+                                        variant="outlined" 
+                                        fullWidth 
+                                        error={props.errors.password && props.touched.password}
+                                        required
+                                        helperText={<ErrorMessage name="password" />}
+                                        />
+                                   </Grid>
                               </Grid>
-                              <Grid item xs={12} sm={6}>
-                                   <Field 
-                                    as={TextField} 
-                                    label='Last Name' 
-                                    name="last_name"
-                                    variant="outlined" 
-                                    fullWidth 
-                                    error={props.errors.last_name && props.touched.last_name}
-                                    required
-                                    helperText={<ErrorMessage name="last_name" />}
-                                   />
-                              </Grid>
-                              <Grid item xs={12}>
-                                   <Field 
-                                    as={TextField} 
-                                    label='Email Address' 
-                                    name="email" 
-                                    variant="outlined" 
-                                    fullWidth 
-                                    error={props.errors.email && props.touched.email}
-                                    required
-                                    helperText={<ErrorMessage name="email" />}
-                                   />
-                              </Grid>
-                              <Grid item xs={12}>
-                                   <Field 
-                                    as={TextField} 
-                                    label='Password' 
-                                    name="password" 
-                                    type="password"
-                                    variant="outlined" 
-                                    fullWidth 
-                                    error={props.errors.password && props.touched.password}
-                                    required
-                                    helperText={<ErrorMessage name="password" />}
-                                   />
-                              </Grid>
-                         </Grid>
 
-                         <Button
-                              type="submit"
-                              fullWidth
-                              variant="contained"
-                              color="primary"
-                              size="large"
-                              className={classes.submit}
-                              disabled={props.isSubmitting}
-                         >
-                         {props.isSubmitting ? "Loading..." : "Sign Up"}
-                         </Button>
+                              <Button
+                                   type="submit"
+                                   fullWidth
+                                   variant="contained"
+                                   color="primary"
+                                   size="large"
+                                   className={classes.submit}
+                                   disabled={props.isSubmitting}
+                              >
+                              {props.isSubmitting ? "Loading..." : "Sign Up"}
+                              </Button>
 
-                    </Form>
-               )}
-               </Formik>
+                         </Form>
+                    )}
+                    </Formik>
+                    </div>
+
                </div>
-
-
-               <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-               <Alert onClose={handleClose} severity="success">
-                    {msg}
-               </Alert>
-               </Snackbar>
-
-
-          </div>
-     </Container>
-     </>
-  );
+          </Container>
+          </>
+     );
 }

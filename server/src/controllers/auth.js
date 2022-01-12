@@ -1,7 +1,7 @@
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
-
 const User = require('../models/user')
+// ---------------------------------------
 
 // Create json web token
 const maxAge = 3 * 24 * 60 * 60;
@@ -65,13 +65,13 @@ exports.signIn = (req, res) => {
                return res.status(200).cookie('admin', token, {
                     httpOnly: true,
                     maxAge: maxAge * 1000
-               }).json({message: 'You\'re LoggedIn as Admin', isAuth: true})
+               }).status(200).json({isAuth: true, role: user.role})
           } 
           else if( user.role === 'user') {
                return res.status(200).cookie('user', token, {
                     httpOnly: true,
                     maxAge: maxAge * 1000
-               }).json({message: 'You\'re LoggedIn as User', isAuth: true})
+               }).json({isAuth: true, role: user.role})
           }
           
      })
@@ -85,6 +85,6 @@ exports.signIn = (req, res) => {
 exports.logout = (req, res) => {
      res.clearCookie('user')
      res.clearCookie('admin')
-     // res.cookie('technician_token', '', { maxAge: 1 })
+     // res.cookie('admin', '', { maxAge: 1 })
      res.redirect('/')
- }
+}

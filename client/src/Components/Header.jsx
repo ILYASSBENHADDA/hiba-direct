@@ -7,39 +7,9 @@ import Grid from '@material-ui/core/Grid';
 import { Button } from '@material-ui/core';
 import { UserContext } from "../Context/UserContext"
 import ImageBg from "../Assets/images/header-bg.jpg"
-
-const useStyles = makeStyles((theme) => ({
-  mainFeaturedPost: {
-    position: 'relative',
-    backgroundColor: theme.palette.grey[800],
-    color: theme.palette.common.white,
-    marginBottom: theme.spacing(4),
-    backgroundImage: 'url(https://source.unsplash.com/random)',
-    backgroundSize: 'cover',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-  },
-  overlay: {
-    position: 'absolute',
-    top: 0,
-    bottom: 0,
-    right: 0,
-    left: 0,
-    backgroundColor: 'rgba(0,0,0,.3)',
-  },
-  mainFeaturedPostContent: {
-    position: 'relative',
-    padding: theme.spacing(3),
-    [theme.breakpoints.up('md')]: {
-      padding: theme.spacing(6),
-      paddingRight: 0,
-    },
-  },
-  heroButtons: {
-     marginTop: theme.spacing(4),
-   },
-}));
-
+import { Link } from 'react-router-dom';
+import useStyles from '../Styles/ThemeStyle';
+// ------------------------------------------------------
 
 const post = {
      title: 'Fundraising for the people',
@@ -74,8 +44,8 @@ export default function Header() {
               <Grid container spacing={2}>
                 {isAuth ? 
                 <Grid item>
-                  <Button variant="contained" color="primary" onClick={() => window.location.href = "/add-fundraiser"}>
-                    Start a new fundraising
+                  <Button variant="contained" color="primary">          
+                    <Link to="/add-fundraiser" className={classes.linkPrimary}> Start a new fundraising </Link>
                   </Button>
                 </Grid>
                 : <>

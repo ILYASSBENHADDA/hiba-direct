@@ -1,24 +1,11 @@
-// import axios from 'axios'
 import React, { createContext, useState, useEffect } from 'react'
 import api from '../Api/api'
+// -----------------------------------------------------------------
 
 // Set Up Context
 export const UserContext = createContext(null)
 
 export const UserProvider = ({ children }) => {
-
-     // const [isAuth, setIsAuth] = useState(false)
-     // const [role, setRole] = useState('')
-     // const [userInfo, setUserInfo] = useState([])
-
-     // useEffect(()=> {
-     //      api.get('').then((response) => {
-     //           console.log(response.data)
-     //           setIsAuth(response.data.isAuth)
-     //           setRole(response.data.role)
-     //      })
-     //      .catch(err => { console.log(err) })
-     // }, [])
 
      const [infos, setInfos] = useState({ isAuth: false, role: '' });
      const getData = async () => {
@@ -40,9 +27,27 @@ export const UserProvider = ({ children }) => {
 
      return (
           <>
-               <UserContext.Provider value={{ infos }}>
+               <UserContext.Provider value={{ infos, setInfos }}>
                     {children}
                </UserContext.Provider>
           </>
      )
 }
+
+
+
+
+
+
+     // const [isAuth, setIsAuth] = useState(false)
+     // const [role, setRole] = useState('')
+     // const [userInfo, setUserInfo] = useState([])
+
+     // useEffect(()=> {
+     //      api.get('').then((response) => {
+     //           console.log(response.data)
+     //           setIsAuth(response.data.isAuth)
+     //           setRole(response.data.role)
+     //      })
+     //      .catch(err => { console.log(err) })
+     // }, [])

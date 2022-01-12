@@ -4,8 +4,8 @@ import {Redirect} from 'react-router-dom'
 function NotFound() {
      return (
           <>
-               {/* <h1>404 page not found!</h1> */}
-               <Redirect to='/' />
+               <h1>404 page not found!</h1>
+               {/* <Redirect to='/' /> */}
           </>
      )
 }

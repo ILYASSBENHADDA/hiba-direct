@@ -14,9 +14,10 @@ import AddCategory from '../Pages/admin/AddCategory'
 import Payment from '../Pages/admin/Payment'
 import Users from '../Pages/admin/Users'
 // Protected Routes
-// import { AuthRouter, AdminRouter, UserRouter } from './ProtectedRoutes'
+import { AuthRouter, AdminRouter, UserRouter } from './ProtectedRoutes'
 // Context Api 
 import { UserContext } from "../Context/UserContext"
+import Fundraisers from '../Pages/admin/Fundraisers'
 
 
 
@@ -34,43 +35,20 @@ function Routes() {
                     <Route exact path="/logout" component={Logout}/>
                     
                     {/* Authentication */}
-                    {isAuth ? null
-                    : <>
-                    <Route exact path="/sign-up" component={SignUp}/>
-                    <Route exact path="/sign-in" component={SignIn}/>
-                    </>}
+                    <Route exact path="/sign-up" component={SignUp} />
+                    <AuthRouter exact path="/sign-in" component={SignIn} isAuth={isAuth} role={role}/>
 
                     {/* Admin & User Routes */}
-                    {(role === 'Admin' && !isAuth) ? null
-                    : <>
-                    <Route exact path="/dashboard" component={Dashboard}/>
-                    <Route exact path="/add-fundraiser" component={AddFundraiser}/>
-                    <Route exact path="/review/:id" component={DetailsInfo}/>
+                    <AdminRouter exact path="/dashboard" isAuth={isAuth} role={role} component={Dashboard}/>
+                    <AdminRouter exact path="/add-fundraiser" component={AddFundraiser} isAuth={isAuth} role={role}/>
+                    {/* <AdminRouter exact path="/review/:id" component={DetailsInfo} isAuth={isAuth} role={role}/> */}
+                    <Route exact path="/review/:id" component={DetailsInfo} />
 
-                    <Route exact path="/payments" component={Payment}/>
-                    <Route exact path="/add-city" component={AddCity}/>
-                    <Route exact path="/add-category" component={AddCategory}/>
-                    <Route exact path="/users" component={Users}/>
-                    </>}
-
-                    {/* {() => {
-                         if(role === 'Admin' && isAuth === true) {
-                              <>
-                              <Route exact path="/dashboard" component={Dashboard}/>
-                              <Route exact path="/add-fundraiser" component={AddFundraiser}/>
-                              <Route exact path="/review/:id" component={DetailsInfo}/>
-                              <Route exact path="/payments" component={Payment}/>
-                              <Route exact path="/add-city" component={AddCity}/>
-                              <Route exact path="/add-category" component={AddCategory}/>
-                              <Route exact path="/users" component={Users}/>
-                              </>
-                         } else if (role === 'User' && isAuth === true) {
-                              <>
-                              <Route exact path="/dashboard" component={Dashboard}/>
-                              <Route exact path="/add-fundraiser" component={AddFundraiser}/>
-                              </>
-                         }
-                    }} */}
+                    <AdminRouter exact path="/fundraisers" component={Fundraisers} isAuth={isAuth} role={role}/>
+                    <AdminRouter exact path="/payments" component={Payment} isAuth={isAuth} role={role}/>
+                    <AdminRouter exact path="/add-city" component={AddCity} isAuth={isAuth} role={role}/>
+                    <AdminRouter exact path="/add-category" component={AddCategory} isAuth={isAuth} role={role}/>
+                    <AdminRouter exact path="/users" component={Users} isAuth={isAuth} role={role}/>
 
                
                     <Route exact path="/404" component={NotFound}/>

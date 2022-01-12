@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
 import clsx from 'clsx';
-import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import Container from '@material-ui/core/Container';
@@ -12,26 +11,28 @@ import PostList from '../../Components/user/PostList';
 import NavAndSideBar from '../../Components/dashboard/NavAndSideBar';
 import AddIcon from '@material-ui/icons/Add';
 import Copyright from '../../Components/Copyright';
-// Context Api 
-import { UserContext } from "../../Context/UserContext"
 import api from '../../Api/api';
 import PriceFormat from '../../Utils/PriceFormat';
 import { Helmet } from 'react-helmet';
-
+import { Link } from 'react-router-dom';
+import useStyles from '../../Styles/ThemeStyle';
+// Context Api 
+import { UserContext } from "../../Context/UserContext"
+// --------------------------------------------------------------------
 
 export default function Dashboard() {
   const classes = useStyles();
   const [statistic, setStatistic] = useState('')
   const { infos:{ role }} = useContext(UserContext)
 
-  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+  const fixedHeightPaper = clsx(classes.paperDash, classes.fixedHeight);
 
   useEffect(() => {
     api.get('statistics').then(resp => {
       console.log(resp)
       setStatistic(resp.data)
     })
-  }, [])
+  }, [statistic])
 
   return (
     <>
@@ -50,25 +51,24 @@ export default function Dashboard() {
         <Container maxWidth="lg" className={classes.container}>
           {/* End Add Fundraiser Button */}
           <Button
-            onClick={() => window.location.href = "/add-fundraiser"}
             style={{marginBottom: 20}}
             variant="contained"
             color="primary"
             className={classes.button}
             startIcon={<AddIcon />}
           >
-            Start a new fundraiser
+            <Link to="/add-fundraiser" className={classes.linkPrimary}> Start a new fundraiser </Link>
           </Button>
           {/* End Add Fundraiser Button */}
           
           <Grid container spacing={3}>
 
-            {role === 'Admin' ?
+            {role === 'admin' ?
             <>
             {/* Recent Statistics (ADMIN) */}
             <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
-                <Statistics title={'Fundraiser Accepted'} number={statistic.fundraiserApprovedCount} link={'/dashboard'}/>
+                <Statistics title={'Fundraiser Activated'} number={statistic.fundraiserApprovedCount} link={'/dashboard'}/>
               </Paper>
             </Grid>
 
@@ -92,7 +92,7 @@ export default function Dashboard() {
             
             {/* Recent Requists (AMDIN) */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
+              <Paper className={classes.paperDash}>
                 <ReqList />              
               </Paper>
             </Grid>
@@ -101,7 +101,7 @@ export default function Dashboard() {
             <>
             {/* Recent Post list (USER) */}
             <Grid item xs={12}>
-              <Paper className={classes.paper}>
+              <Paper className={classes.paperDash}>
                 <PostList />              
               </Paper>
             </Grid>
@@ -124,33 +124,3 @@ export default function Dashboard() {
   </>
   );
 }
-
-
-
-
-
-
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: 'flex',
-  },
-  appBarSpacer: theme.mixins.toolbar,
-  content: {
-    flexGrow: 1,
-    height: '100vh',
-    overflow: 'auto',
-  },
-  container: {
-    paddingTop: theme.spacing(4),
-    paddingBottom: theme.spacing(4),
-  },
-  paper: {
-    padding: theme.spacing(2),
-    display: 'flex',
-    overflow: 'auto',
-    flexDirection: 'column',
-  },
-  fixedHeight: {
-    height: 240,
-  },
-}));

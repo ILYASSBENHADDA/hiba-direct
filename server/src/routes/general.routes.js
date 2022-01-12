@@ -1,79 +1,12 @@
 const express = require('express')
 const router = express.Router()
-const { getFundraiserTrue, getFundraiserItem, payment, updateFundraiser } = require('../controllers/general')
-const Fundraiser = require('../models/fundraiser')
-const cloudinary = require("../utils/cloudinary");
-const upload = require("../utils/multer");
-const jwt = require('jsonwebtoken')
-
+const { getFundraiserTrue, getFundraiserItem, payment, updateFundraiser, createFundraiser } = require('../controllers/general')
+const uploadMulter = require('../utils/upload')
+// ----------------------------------------------------------------
 
 
 // Create Fundraiser
-router.post('/create-fundraiser', upload.single('image'), async (req, res, next) => {
-     
-     const { city, category, amount, title, description } = req.body
-
-     if (city === '' || category === '' || amount === '' || title === '' || description === '') {
-          return res.json({msg: 'Please fill out all field', accepted: false})
-     }
-     // Get user role & id
-     let role 
-     let user_id
-     const token = req.cookies.admin || req.cookies.user
-     if (token) {
-          jwt.verify(token, process.env.JWT_SECRET, async (err, decodedToken) => {
-               if (err) throw err
-               role = decodedToken.role
-               user_id = decodedToken.id
-          })
-     }
-
-
-     try {
-          // Upload image to cloudinary
-          const result = await cloudinary.uploader.upload(req.file.path);
-     
-          let fundraiser
-
-          if (role === 'admin') {
-               // Create new Fundraiser
-               fundraiser = new Fundraiser({
-                    user_id: user_id,
-                    city_id: city,
-                    category_id: category,
-                    amount: amount,
-                    image: result.secure_url,
-                    cloudinary_img_id: result.public_id,
-                    title: title,
-                    description: description,
-                    isAccepted: true
-               });
-          } 
-          else {
-               // Create new Fundraiser
-               fundraiser = new Fundraiser({
-                    user_id: user_id,
-                    city_id: city,
-                    category_id: category,
-                    amount: amount,
-                    image: result.secure_url,
-                    cloudinary_img_id: result.public_id,
-                    title: title,
-                    description: description,
-               });
-          }
-          
-
-          // Save user
-          await fundraiser.save();
-          res.json({msg: 'The fundraiser has sent, wait for approved', accepted: true})
-     } 
-     catch (err) {
-          console.log(err);
-     }
-
-})
-
+router.post('/create-fundraiser', uploadMulter, createFundraiser)
 
 
 // Get Fundraiser
@@ -89,7 +22,7 @@ router.post('/payment', payment)
 
 
 // Update Fundraiser
-router.post('/update-fundraiser/:id', updateFundraiser)
+router.post('/update-fundraiser/:id', uploadMulter, updateFundraiser)
 
 
 module.exports = router

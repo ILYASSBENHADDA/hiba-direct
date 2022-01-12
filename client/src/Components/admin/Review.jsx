@@ -1,54 +1,74 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
-import { Grid, TextField, Button, Snackbar, FormLabel, Box, CardMedia } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
+import { Grid, TextField, Button, FormLabel, Box, CardMedia } from '@material-ui/core';
 import Title from '../dashboard/Title';
 import useStyles from '../../Styles/ThemeStyle';
 import api from '../../Api/api';
 import FreezeIcon from '@material-ui/icons/AcUnit';
 import DeleteIcon from '@material-ui/icons/DeleteOutline';
 import UpdateIcon from '@material-ui/icons/Update';
+import CancelIcon from '@material-ui/icons/Cancel';
+import { useSnackbar } from 'notistack';
+const UploadPlacehoder = '/uploads/placeholder-image.png'
+// -----------------------------------------------------------
 
-function Alert(props) {
-     return <MuiAlert elevation={6} variant="filled" {...props} />;
-}
 
 export default function Review() {
      const classes = useStyles();
+     const { enqueueSnackbar } = useSnackbar();
+     const { id } = useParams()
 
-     const [open, setOpen] = useState(false);
-     const [msg, setMsg] = useState('');
-     const [fundraiser, setFundraiser] = useState({
+     const [thumbnial, setThumbnial] = React.useState(null)
+     const [content, setContent] = useState({
+          image: '',
           title: '',
           description: ''
      })
-     // const [newValue, setNewValue] = useState({
-     //      amount: ''
-     // })
-
-     const { id } = useParams()
 
      useEffect(() => {
           api.get(`get-fundraiser/${id}`)
           .then(resp => {
-               setFundraiser(resp.data)
-               console.log(resp.data)
+               setContent(resp.data)
           })
           .catch((error) => alert(error))  
      }, [id])
 
-     const onChange = (e) => {
-          setFundraiser({...fundraiser, [e.target.name]: e.target.value})
+     // On Change
+     const onChange = (name) => (e) => {
+          const value = name === 'image' ? e.target.files[0] : e.target.value;
+          setContent({ ...content, [name]: value });
+
+          // Image preview upload
+          if (name === 'image') {
+               const reader = new FileReader();
+               const img = e.target.files[0]
+               reader.onload = () =>{
+                    if(reader.readyState === 2){
+                         setThumbnial(reader.result)
+                    }
+               }
+               img ? reader.readAsDataURL(img) : setThumbnial(UploadPlacehoder)
+          }
+     }
+
+     // Remove Preveiw Image
+     const RemovePreviewImg = () => {
+          setThumbnial(UploadPlacehoder)
+          content.image = "placeholder.png"
      }
 
      // On Update
      const onUpdate = (e) => {
           e.preventDefault()
 
-          api.post(`update-fundraiser/${id}`, fundraiser)
-          .then((resp) => {
-               setMsg(resp.data.msg)
-               setOpen(true)
+          const data = new FormData();
+          data.append("image", content.image);
+          data.append("title", content.title);
+          data.append("description", content.description);
+          
+          api.post(`update-fundraiser/${id}`, data)
+          .then(() => {
+               enqueueSnackbar('Data is updated!', { variant: 'success' })
           })
           .catch((error) => alert(error))
      }
@@ -60,11 +80,7 @@ export default function Review() {
           if(alert) {
                api.post('freeze-fundraiser', { id, boolean })
                .then((resp) => {
-                    setMsg(resp.data.msg)
-                    setOpen(true)
-                    setTimeout(() => {
-                         window.location.reload()
-                    }, 1500);
+                    enqueueSnackbar(resp.data.msg, { variant: 'success' })
                })
                .catch((error) => alert(error))
           }
@@ -76,88 +92,54 @@ export default function Review() {
           const alert = window.confirm(`Are you sure you want to delete this fundraising?`)
           if(alert) {
                api.post('delete-fundraiser', { id })
-               .then((resp) => {
-                    setMsg(resp.data.msg)
-                    setOpen(true)
+               .then(() => {
+                    enqueueSnackbar("Item is deleted!", { variant: 'success' })
                     setTimeout(() => {
-                         window.location.href = "/dashboard"
+                         window.location.href = "/"
                     }, 1500);
                })
                .catch((error) => alert(error))
           } 
      }
 
-     // On Fix
-     const onFix = (id) => {
-          console.log(id)
-          
-     }
-
-     const handleClose = (event, reason) => {
-          if (reason === 'clickaway') {
-               return;
-          }
-          setOpen(false);
-     };
-
 
 
      return (
      <>
-          {/* <Title><Link href={`/post/${fundraiser.id}`}> {fundraiser.title} <OpenLink fontSize='small'/> </Link></Title> */}
-          <Title>{fundraiser.title}</Title>
+          <Title>{content.title}</Title>
           <form>
           <Grid container spacing={2}>
 
+               {/* IMAGE */}
                <Grid item xs={12}>
-                    <CardMedia
-                    style={{
-                         height: 0,
-                         paddingTop: '30%',
-                         borderRadius: 10,
-                    }}
-                    // className={classes.media}
-                    image={fundraiser.image}
-                    title={fundraiser.title}
-                    />
+                    <FormLabel sx={{ mb: -2 }}>Image</FormLabel>
+                    <label htmlFor="input">
+                         <CardMedia
+                              style={{
+                                   height: 0,
+                                   paddingTop: '30%',
+                                   borderRadius: 10,
+                                   width: 500,
+                                   cursor: 'pointer',
+                                   position: 'relative'
+                              }}
+                              image={thumbnial ? thumbnial : `/uploads/${content.image}`}
+                         >
+                              <CancelIcon 
+                                   style={{color: "#549e39", position: 'absolute', top: 10, right: 10, fontSize: 30, display: thumbnial === UploadPlacehoder ? 'none' : 'block'}} 
+                                   onClick={RemovePreviewImg} 
+                              />
+                         </CardMedia>
+                    </label>
+                    <input type="file" hidden accept="image/*" name="image" id="input" onChange={onChange("image")} />
                </Grid>
-               
-               {/* <Grid item xs={12}>
-                    <FormLabel>Username</FormLabel>
-                    <TextField
-                         variant="outlined"
-                         fullWidth
-                         defaultValue='kkdndf'
-                    />
-               </Grid>
-
-               <Grid item xs={12}>
-                    <FormLabel>City</FormLabel>
-                    <TextField
-                         variant="outlined"
-                         fullWidth
-                         value={fundraiser.city_id.name}
-                         InputProps={{
-                              readOnly: true,
-                         }}
-                    />
-               </Grid>
-
-               <Grid item xs={12}>
-                    <FormLabel>Category</FormLabel>
-                    <TextField
-                         variant="outlined"
-                         fullWidth
-                         value={fundraiser.category_id.name}
-                    />
-               </Grid> */}
 
                <Grid item xs={12}>
                     <FormLabel>Amount</FormLabel>
                     <TextField
                          variant="outlined"
                          fullWidth
-                         value={fundraiser.amount}
+                         value={content.amount}
                     />
               </Grid>
 
@@ -166,9 +148,9 @@ export default function Review() {
                     <TextField
                          variant="outlined"
                          fullWidth
-                         value={fundraiser.title}
+                         value={content.title}
                          name="title"
-                         onChange={onChange}
+                         onChange={onChange("title")}
                     />
                </Grid>
 
@@ -177,31 +159,20 @@ export default function Review() {
                     <TextField
                          variant="outlined"
                          fullWidth
-                         value={fundraiser.description}
+                         value={content.description}
                          multiline
                          rows={5}
                          name="description"
-                         onChange={onChange}
+                         onChange={onChange("description")}
                     />
                </Grid>
 
                <Grid item xs={12}>
 
-               {fundraiser.isAccepted === null ? null 
+               {content.isAccepted === null ? null 
                : 
-               (fundraiser.isAccepted === false ?
-               <Button
-                    type="submit"
-                    // fullWidth
-                    variant="contained"
-                    color="primary"
-                    size="large"
-                    className={classes.submit}
-                    onClick={onFix}
-                    startIcon={<UpdateIcon />}
-               >
-               {'Fix & Resend'}
-               </Button>
+               (content.isAccepted === false ?
+               null
                : 
                <>
                <Box display="flex" justifyContent="space-around" >
@@ -226,20 +197,20 @@ export default function Review() {
                          variant="contained"
                          size="large"
                          className={classes.submit}
-                         onClick={() => onFreeze(fundraiser._id, fundraiser.isFreezed)}
+                         onClick={() => onFreeze(content._id, content.isFreezed)}
                          startIcon={<FreezeIcon />}
                     >
-                         {fundraiser.isFreezed ? 'Defrost fundraiser' : 'Freeze fundraiser'}
+                         {content.isFreezed ? 'Defrost fundraiser' : 'Freeze fundraiser'}
                     </Button>
 
-                    {/* Stop button */}
+                    {/* Delete button */}
                     <Button
                     style={{color: '#fff', background: '#e00000'}}
                          // fullWidth
                          variant="contained"
                          size="large"
                          className={classes.submit}
-                         onClick={() => onDelete(fundraiser._id)}
+                         onClick={() => onDelete(content._id)}
                          startIcon={<DeleteIcon />}
                     >
                     Delete fundraiser
@@ -248,14 +219,6 @@ export default function Review() {
 
                </> )}
 
-
-               {/* ******************************************************************** */}
-               <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success">
-                         {msg}
-                    </Alert>
-               </Snackbar>
-               {/* ******************************************************************** */}
                </Grid>
 
 

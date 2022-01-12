@@ -10,6 +10,7 @@ import AddFundraisingFrom from '../../Components/admin/AddFundraisingFrom';
 import Copyright from '../../Components/Copyright';
 import MuiAlert from '@material-ui/lab/Alert';
 import { Helmet } from 'react-helmet';
+import Title from '../../Components/dashboard/Title';
 
 
 function Alert(props) {
@@ -42,7 +43,8 @@ export default function AddFundraiser() {
           <Grid container spacing={3}>
 
           <Grid item xs={12}>
-            <Alert severity="info">Please make sure to complete the following field with the right information, because you can't modify this later.</Alert>
+            {/* <Alert severity="info">Please make sure to complete the following field with the right information, because you can't modify this later.</Alert> */}
+            <Title>Add a fundraising</Title>
           </Grid>
 
             {/* Chart */}

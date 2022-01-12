@@ -6,7 +6,7 @@ body {
      -moz-osx-smoothing: grayscale;
 }
 
-
+/* custom style for search bar */
 .MuiAutocomplete-inputRoot[class*="MuiOutlinedInput-root"] .MuiAutocomplete-input:first-child {
      padding-left: 50px !important;
      color: #fff;

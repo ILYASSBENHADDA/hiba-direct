@@ -12,6 +12,7 @@ import api from '../../Api/api';
 import OpenLink from '@material-ui/icons/OpenInNew';
 import DateFormat from '../../Utils/DateFormat';
 import PriceFormat from '../../Utils/PriceFormat';
+// --------------------------------------------------------------
 
 
 export default function PaymentList() {
@@ -22,11 +23,11 @@ export default function PaymentList() {
     api.get('get-payment')
     .then(resp => setPayment(resp.data))
     .catch((error) => alert(error))
-  }, [])
+  }, [payment])
 
   return (
     <>
-    <Title>Payment list</Title>
+    <Title>Payments list</Title>
     <TableContainer component={Paper}>
       <Table>
         <TableHead>

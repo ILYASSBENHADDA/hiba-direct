@@ -8,7 +8,7 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Title from '../dashboard/Title';
 import api from '../../Api/api';
-
+// --------------------------------------------------------------
 
 export default function CityList() {
 
@@ -18,7 +18,10 @@ export default function CityList() {
     api.get('get-city')
     .then(resp => setCity(resp.data))
     .catch((error) => alert(error))
-  }, [])
+  }, [city])
+
+  // Static count for table
+  let id = 1
 
   return (
     <>
@@ -34,7 +37,7 @@ export default function CityList() {
         <TableBody>
           {city.map((item, key) => (
             <TableRow key={key}>
-              <TableCell component="th">{item._id}</TableCell>
+              <TableCell component="th">{id++}</TableCell>
               <TableCell>{item.name}</TableCell>
             </TableRow>
           ))}
